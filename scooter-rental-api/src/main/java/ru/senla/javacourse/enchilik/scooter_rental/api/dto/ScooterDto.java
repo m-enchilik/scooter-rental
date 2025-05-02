@@ -1,0 +1,41 @@
+package ru.senla.javacourse.enchilik.scooter_rental.api.dto;
+
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
+import ru.senla.javacourse.enchilik.scooter_rental.core.enumeration.ScooterStatus;
+
+public class ScooterDto {
+
+    private Long id;
+
+    @NotBlank(message = "Модель не может быть пустой")
+    @Size(max = 100, message = "Модель не может превышать 100 символов")
+    private String model;
+
+    @NotBlank(message = "Серийный номер не может быть пустым")
+    @Size(max = 50, message = "Серийный номер не может превышать 50 символов")
+    private String serialNumber;
+
+    @NotNull(message = "Статус не может быть null")
+    private ScooterStatus status;
+
+    @NotNull(message = "Уровень заряда не может быть null")
+    @Min(value = 0, message = "Уровень заряда не может быть отрицательным")
+    @Max(value = 100, message = "Уровень заряда не может превышать 100")
+    private Integer chargeLevel;
+
+    @PositiveOrZero(message = "Пробег не может быть отрицательным")
+    private Double mileage;
+
+    private Long rentalPointId;
+
+    private String rentalPointName;
+
+    private Long tariffId;
+
+    private String tariffName;
+}
