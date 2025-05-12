@@ -1,0 +1,17 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: mydatabase
+      POSTGRES_PASSWORD: secret
+      POSTGRES_USER: myuser
+    ports:
+      - 5432
+    volumes:
+      - ./database:/var/lib/postgresql/data
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8090:8080
