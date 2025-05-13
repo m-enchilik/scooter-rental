@@ -41,7 +41,6 @@ public class Scooter {
     @JoinColumn(name = "rental_point_id")
     private RentalPoint rentalPoint;
 
-    //    TODO: надо ли отразить в таблице
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tariff_id")
     private Tariff tariff;

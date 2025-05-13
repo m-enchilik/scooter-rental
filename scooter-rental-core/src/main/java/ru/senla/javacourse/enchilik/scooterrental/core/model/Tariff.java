@@ -2,6 +2,8 @@ package ru.senla.javacourse.enchilik.scooterrental.core.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -19,6 +21,8 @@ public class Tariff {
     private Long id;
 
     //    TODO: добавить отношения и аннотации
+    @Column(name = "type", nullable = false)
+    @Enumerated(EnumType.STRING)
     private TariffType type;
 
     @Column(name = "name", nullable = false, length = 50)
@@ -26,13 +30,6 @@ public class Tariff {
 
     @Column(name = "description", length = 255)
     private String description;
-
-    //    TODO: удалить
-    //    @Column(name = "price_per_hour")
-    //    private Double pricePerHour;
-
-    //    @Column(name = "discount")
-    //    private Double discount;
 
     @Column(name = "price")
     private BigDecimal price;

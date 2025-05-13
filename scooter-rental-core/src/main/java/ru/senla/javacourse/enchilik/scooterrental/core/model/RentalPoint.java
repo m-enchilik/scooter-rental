@@ -41,7 +41,6 @@ public class RentalPoint {
         fetch = FetchType.LAZY)
     private List<Scooter> scooters;
 
-    //    TODO: удалить, если не потребуется
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_point_id")
     private RentalPoint parentPoint;
