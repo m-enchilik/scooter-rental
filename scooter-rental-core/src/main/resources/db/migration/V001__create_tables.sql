@@ -72,7 +72,7 @@ CREATE TABLE rentals
     tariff_id     BIGINT REFERENCES tariffs (id)
 );
 
-CREATE TABLE subscription
+CREATE TABLE subscriptions
 (
     id                  BIGSERIAL PRIMARY KEY,
     user_id             BIGINT REFERENCES users (id)    NOT NULL,

@@ -1,24 +1,24 @@
-INSERT INTO roles (name)
-VALUES ('ROLE_USER'),
-       ('ROLE_MANAGER'),
-       ('ROLE_ADMIN');
+INSERT INTO roles (id, name)
+VALUES (1, 'ROLE_USER'),
+       (2, 'ROLE_MANAGER'),
+       (3, 'ROLE_ADMIN');
 
-INSERT INTO users (username, password, first_name, last_name, email, phone_number)
-VALUES ('admin', '$2a$12$/9LH.RZqfutLDiThniVCa.tPCsrEg8P8XWEZSYStFy.0NoGTeuQCm', 'Admin', 'Adminov', 'admin@mail.ru', '+375293040036'),
-       ('user2', '$2a$12$/9LH.RZqfutLDiThniVCa.tPCsrEg8P8XWEZSYStFy.0NoGTeuQCm', 'User', 'Two', 'user2@mail.ru', '+375291111111'),
-       ('user3', '$2a$12$/9LH.RZqfutLDiThniVCa.tPCsrEg8P8XWEZSYStFy.0NoGTeuQCm', 'User', 'Three', 'user3@mail.ru', '+375292222222'),
-       ('user4', '$2a$12$/9LH.RZqfutLDiThniVCa.tPCsrEg8P8XWEZSYStFy.0NoGTeuQCm', 'User', 'Four', 'user4@mail.ru', '+375293333333'),
-       ('user5', '$2a$12$/9LH.RZqfutLDiThniVCa.tPCsrEg8P8XWEZSYStFy.0NoGTeuQCm', 'User', 'Five', 'user5@mail.ru', '+375294444444');
+INSERT INTO users (id, username, password, first_name, last_name, email, phone_number)
+VALUES (1, 'admin', '$2a$12$/9LH.RZqfutLDiThniVCa.tPCsrEg8P8XWEZSYStFy.0NoGTeuQCm', 'Admin', 'Adminov', 'admin@mail.ru', '+375293040036'),
+       (2, 'user2', '$2a$12$/9LH.RZqfutLDiThniVCa.tPCsrEg8P8XWEZSYStFy.0NoGTeuQCm', 'User', 'Two', 'user2@mail.ru', '+375291111111'),
+       (3, 'user3', '$2a$12$/9LH.RZqfutLDiThniVCa.tPCsrEg8P8XWEZSYStFy.0NoGTeuQCm', 'User', 'Three', 'user3@mail.ru', '+375292222222'),
+       (4, 'user4', '$2a$12$/9LH.RZqfutLDiThniVCa.tPCsrEg8P8XWEZSYStFy.0NoGTeuQCm', 'User', 'Four', 'user4@mail.ru', '+375293333333'),
+       (5, 'user5', '$2a$12$/9LH.RZqfutLDiThniVCa.tPCsrEg8P8XWEZSYStFy.0NoGTeuQCm', 'User', 'Five', 'user5@mail.ru', '+375294444444');
 
 INSERT INTO user_roles (user_id, role_id)
 VALUES (1, 3);
 
-INSERT INTO tariffs (name, description, price_per_hour, subscription_price, discount, is_subscription)
-VALUES ('Почасовой', 'Оплата за каждый час использования', 5.0, NULL, NULL, FALSE),
-       ('Дневной абонемент', 'Абонемент на целый день', NULL, 20.0, NULL, TRUE),
-       ('Студенческий', 'Скидка для студентов', 4.0, NULL, 0.10, FALSE),
-       ('Ночной', 'Тариф для ночного катания', 7.0, NULL, NULL, FALSE),
-       ('Выходного дня', 'Специальный тариф на выходные', 6.0, NULL, NULL, FALSE);
+INSERT INTO tariffs (type, name, description, price, units_included, validity_period_hours, is_subscription)
+VALUES ('BASIC', 'Почасовой', 'Оплата за каждый час использования', 5.0, NULL, NULL, FALSE),
+       ('BASIC', 'Дневной абонемент', 'Абонемент на целый день', NULL, 20.0, NULL, TRUE),
+       ('BASIC', 'Студенческий', 'Скидка для студентов', 4.0, NULL, 0.10, FALSE),
+       ('BASIC', 'Ночной', 'Тариф для ночного катания', 7.0, NULL, NULL, FALSE),
+       ('BASIC', 'Выходного дня', 'Специальный тариф на выходные', 6.0, NULL, NULL, FALSE);
 
 INSERT INTO rental_points (name, address, latitude, longitude, parent_point_id)
 VALUES ('Главный офис Гомель', 'просп. Независимости, 10', 53.9025, 27.5615, NULL),
@@ -47,3 +47,7 @@ VALUES (1, 2, '2024-01-20 10:00:00', '2024-01-20 11:30:00', 80.2, 95.2, 7.5, 1),
        (4, 7, '2024-01-21 14:00:00', '2024-01-21 15:00:00', 300.1, 315.1, 5.0, 1),
        (5, 12, '2024-01-22 16:30:00', NULL, 70.7, NULL, NULL, 1),
        (1, 1, '2024-01-23 09:00:00', '2024-01-23 10:00:00', 150.5, 160.5, 5.0, 1);
+
+INSERT INTO subscriptions (user_id, tariff_id, expiration_time, rest_units)
+VALUES (1, 1, '2025-12-31 23:59:59', 10),
+       (1, 2, '2025-06-30 23:59:59', 100);
