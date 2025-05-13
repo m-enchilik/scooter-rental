@@ -52,7 +52,7 @@ public class RentalServiceImpl implements RentalService {
 
     @Override
     @Transactional
-    public RentalDto createRental(RentalDto rentalDto)
+    public RentalDto save(RentalDto rentalDto)
         throws UserNotFoundException, ScooterNotFoundException {
         logger.info("Попытка создать запись аренды: {}", rentalDto);
         try {

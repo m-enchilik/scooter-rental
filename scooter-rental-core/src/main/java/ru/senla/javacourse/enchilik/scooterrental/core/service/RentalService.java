@@ -8,7 +8,7 @@ import ru.senla.javacourse.enchilik.scooterrental.core.exception.TariffNotFoundE
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.UserNotFoundException;
 
 public interface RentalService {
-    RentalDto createRental(RentalDto rentalDto)
+    RentalDto save(RentalDto rentalDto)
         throws UserNotFoundException, ScooterNotFoundException;
 
     RentalDto getRentalById(Long id) throws RentalNotFoundException;

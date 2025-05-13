@@ -1,0 +1,20 @@
+package ru.senla.javacourse.enchilik.scooterrental.core.service;
+
+
+import java.util.List;
+import ru.senla.javacourse.enchilik.scooterrental.api.dto.SubscriptionDto;
+import ru.senla.javacourse.enchilik.scooterrental.core.exception.SubscriptionNotFoundException;
+
+public interface SubscriptionService {
+    SubscriptionDto save(SubscriptionDto subscriptionDto);
+
+    SubscriptionDto findById(Long id) throws SubscriptionNotFoundException;
+
+    SubscriptionDto update(Long id, SubscriptionDto subscriptionDto) throws SubscriptionNotFoundException;
+
+    void delete(Long id) throws SubscriptionNotFoundException;
+
+    List<SubscriptionDto> findAll();
+
+    List<SubscriptionDto> findByUserId(Long id);
+}

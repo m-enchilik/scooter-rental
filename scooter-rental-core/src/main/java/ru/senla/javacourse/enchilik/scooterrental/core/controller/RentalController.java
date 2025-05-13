@@ -34,7 +34,7 @@ public class RentalController {
     @PreAuthorize("hasRole('USER') or hasRole('MANAGER') or hasRole('ADMIN')")
     public ResponseEntity<RentalDto> createRental(@Valid @RequestBody RentalDto rentalDto)
         throws UserNotFoundException, ScooterNotFoundException {
-        RentalDto createdRental = rentalService.createRental(rentalDto);
+        RentalDto createdRental = rentalService.save(rentalDto);
         return new ResponseEntity<>(createdRental, HttpStatus.CREATED);
     }
 

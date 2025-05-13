@@ -31,6 +31,14 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(SubscriptionNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleSubscriptionNotFoundException(
+        SubscriptionNotFoundException ex) {
+        logger.error("Subscription not found: {}", ex.getMessage());
+        ErrorResponse response = new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(RentalPointNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleRentalPointNotFoundException(
         RentalPointNotFoundException ex) {

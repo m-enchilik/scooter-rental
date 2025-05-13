@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.senla.javacourse.enchilik.scooterrental.api.dto.UserDto;
-import ru.senla.javacourse.enchilik.scooterrental.api.dto.UserProfileDto;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.UserAlreadyExistsException;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.UserNotFoundException;
 import ru.senla.javacourse.enchilik.scooterrental.core.model.Role;
@@ -84,7 +83,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserProfileDto getUserById(Long id) throws UserNotFoundException {
+    public UserDto getUserById(Long id) throws UserNotFoundException {
         logger.info("Попытка получить пользователя с ID: {}", id);
 
         try {
@@ -98,9 +97,9 @@ public class UserServiceImpl implements UserService {
                                 "Пользователь с ID " + id + " не найден");
                         });
 
-            UserProfileDto userProfileDto = convertToUserProfileDto(user);
+            UserDto userDto = convertToUserDto(user);
             logger.info("Пользователь с ID {} успешно получен.", id);
-            return userProfileDto;
+            return userDto;
         } catch (Exception e) {
             logger.error("Ошибка при получении пользователя с ID {}: {}", id, e.getMessage(), e);
             throw e;
@@ -109,7 +108,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserProfileDto updateUser(Long id, UserDto userDto) throws UserNotFoundException {
+    public UserDto updateUser(Long id, UserDto userDto) throws UserNotFoundException {
         logger.info("Попытка обновить пользователя с ID: {}, данные: {}", id, userDto);
 
         try {
@@ -165,7 +164,7 @@ public class UserServiceImpl implements UserService {
 
             userRepository.save(user);
             logger.info("Пользователь с ID {} успешно обновлен.", id);
-            return convertToUserProfileDto(user);
+            return convertToUserDto(user);
         } catch (Exception e) {
             logger.error("Ошибка при обновлении пользователя с ID {}: {}", id, e.getMessage(), e);
             throw e;
@@ -197,15 +196,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public List<UserProfileDto> getAllUsers() {
+    public List<UserDto> getAllUsers() {
         logger.info("Попытка получить всех пользователей.");
 
         try {
             List<User> users = userRepository.findAll();
-            List<UserProfileDto> userProfileDtos =
-                users.stream().map(this::convertToUserProfileDto).collect(Collectors.toList());
+            List<UserDto> userDtos =
+                users.stream().map(this::convertToUserDto).collect(Collectors.toList());
             logger.info("Получено {} пользователей.", users.size());
-            return userProfileDtos;
+            return userDtos;
 
         } catch (Exception e) {
             logger.error("Ошибка при получении всех пользователей: {}", e.getMessage(), e);
@@ -235,8 +234,8 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private UserProfileDto convertToUserProfileDto(User user) {
-        UserProfileDto dto = new UserProfileDto();
+    private UserDto convertToUserDto(User user) {
+        UserDto dto = new UserDto();
         dto.setId(user.getId());
         dto.setUsername(user.getUsername());
         dto.setFirstName(user.getFirstName());

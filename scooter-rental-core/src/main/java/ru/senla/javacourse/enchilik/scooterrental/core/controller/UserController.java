@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.senla.javacourse.enchilik.scooterrental.api.dto.UserDto;
-import ru.senla.javacourse.enchilik.scooterrental.api.dto.UserProfileDto;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.UserAlreadyExistsException;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.UserNotFoundException;
 import ru.senla.javacourse.enchilik.scooterrental.core.service.UserService;
@@ -32,9 +31,9 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserProfileDto> getUserById(@PathVariable Long id)
+    public ResponseEntity<UserDto> getUserById(@PathVariable Long id)
         throws UserNotFoundException {
-        UserProfileDto user = userService.getUserById(id);
+        UserDto user = userService.getUserById(id);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
@@ -47,10 +46,10 @@ public class UserController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN') or #id == principal.id")
-    public ResponseEntity<UserProfileDto> updateUser(
+    public ResponseEntity<UserDto> updateUser(
         @PathVariable Long id, @Valid @RequestBody UserDto userDto)
         throws UserNotFoundException {
-        UserProfileDto updatedUser = userService.updateUser(id, userDto);
+        UserDto updatedUser = userService.updateUser(id, userDto);
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 
@@ -63,8 +62,8 @@ public class UserController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<UserProfileDto>> getAllUsers() {
-        List<UserProfileDto> users = userService.getAllUsers();
+    public ResponseEntity<List<UserDto>> getAllUsers() {
+        List<UserDto> users = userService.getAllUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 }
