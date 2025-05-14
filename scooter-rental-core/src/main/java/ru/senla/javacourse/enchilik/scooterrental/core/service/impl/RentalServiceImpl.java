@@ -3,27 +3,25 @@ package ru.senla.javacourse.enchilik.scooterrental.core.service.impl;
 import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.senla.javacourse.enchilik.scooterrental.api.dto.RentalDto;
 import ru.senla.javacourse.enchilik.scooterrental.api.enumeration.ScooterStatus;
-import ru.senla.javacourse.enchilik.scooterrental.core.exception.RentalNotFoundException;
-import ru.senla.javacourse.enchilik.scooterrental.core.exception.ScooterNotFoundException;
-import ru.senla.javacourse.enchilik.scooterrental.core.exception.UserNotFoundException;
-import ru.senla.javacourse.enchilik.scooterrental.core.model.Rental;
-import ru.senla.javacourse.enchilik.scooterrental.core.model.Scooter;
-import ru.senla.javacourse.enchilik.scooterrental.core.model.Tariff;
-import ru.senla.javacourse.enchilik.scooterrental.core.model.User;
-import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.RentalRepository;
-import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.ScooterRepository;
-import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.TariffRepository;
-import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.UserRepository;
+import ru.senla.javacourse.enchilik.scooterrental.core.exception.*;
+import ru.senla.javacourse.enchilik.scooterrental.core.model.*;
+import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.*;
 import ru.senla.javacourse.enchilik.scooterrental.core.service.RentalService;
 import ru.senla.javacourse.enchilik.scooterrental.core.service.ScooterService;
+import ru.senla.javacourse.enchilik.scooterrental.core.tariff.TariffStrategy;
+import ru.senla.javacourse.enchilik.scooterrental.core.tariff.TariffStrategyResolver;
 
 @Service
 public class RentalServiceImpl implements RentalService {
@@ -35,19 +33,23 @@ public class RentalServiceImpl implements RentalService {
     private final ScooterRepository scooterRepository;
     private final ScooterService scooterService;
     private final TariffRepository tariffRepository;
+    private final SubscriptionRepository subscriptionRepository;
+    private final TariffStrategyResolver tariffStrategyResolver;
 
     @Autowired
     public RentalServiceImpl(
-        RentalRepository rentalRepository,
-        UserRepository userRepository,
-        ScooterRepository scooterRepository,
-        ScooterService scooterService,
-        TariffRepository tariffRepository) {
+            RentalRepository rentalRepository,
+            UserRepository userRepository,
+            ScooterRepository scooterRepository,
+            ScooterService scooterService,
+            TariffRepository tariffRepository, SubscriptionRepository subscriptionRepository, TariffStrategyResolver tariffStrategyResolver) {
         this.rentalRepository = rentalRepository;
         this.userRepository = userRepository;
         this.scooterRepository = scooterRepository;
         this.scooterService = scooterService;
         this.tariffRepository = tariffRepository;
+        this.subscriptionRepository = subscriptionRepository;
+        this.tariffStrategyResolver = tariffStrategyResolver;
     }
 
     @Override
@@ -136,6 +138,53 @@ public class RentalServiceImpl implements RentalService {
     }
 
     @Override
+    public RentalDto startRental(Long subscriptionId, Long scooterId)
+            throws SubscriptionNotFoundException, ScooterNotFoundException
+    {
+        // TODO: 14.05.2025 Logger messages
+        User user = getAuthorizedUser();
+
+        if (user.getRentBlocked()) {
+            throw new UserRentalBlockedException("User can't get a rent: '%s'".formatted(user.getUsername()));
+        }
+        Subscription subscription = subscriptionRepository.findById(subscriptionId)
+                .orElseThrow(() -> new SubscriptionNotFoundException("subscription not found by id: '%s'".formatted(subscriptionId)));
+
+        if (user.getId() != subscription.getUser().getId()) {
+            throw new RuntimeException("Wrong subscription: different user");
+            // TODO: make specific exception
+        }
+
+        Scooter scooter = scooterRepository
+                .findById(scooterId)
+                .orElseThrow(() ->
+                        new ScooterNotFoundException("scooter not found by id: '%s'".formatted(scooterId)));
+
+        Tariff tariff = subscription.getTariff();
+
+        TariffStrategy tariffStrategy = tariffStrategyResolver.resolve(tariff.getType());
+
+        LocalDateTime timeLimit = tariffStrategy.getTimeLimit(user, subscription);
+
+        Rental rental = new Rental();
+        rental.setUser(user);
+        rental.setSubscription(subscription);
+        rental.setExpirationTime(timeLimit);
+        rental.setScooter(scooter);
+        rental.setStartMileage(scooter.getMileage());
+
+        rental = rentalRepository.save(rental);
+
+        return convertToRentalDto(rental);
+    }
+
+    private User getAuthorizedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(authentication.getName());
+        return user;
+    }
+
+    @Override
     @Transactional
     public RentalDto endRental(Long id) throws RentalNotFoundException, ScooterNotFoundException {
         logger.info("Попытка завершить аренду с ID: {}", id);
@@ -155,26 +204,21 @@ public class RentalServiceImpl implements RentalService {
                 throw new IllegalArgumentException("Аренда уже завершена");
             }
 
+            Tariff tariff = rental.getTariff(); // TODO: Should be: rental.getSubscription().getTariff()
+            TariffStrategy tariffStrategy = tariffStrategyResolver.resolve(tariff.getType());
+
             rental.setEndTime(LocalDateTime.now());
             Scooter scooter = rental.getScooter();
             rental.setEndMileage(scooter.getMileage());
 
-            BigDecimal cost = calculateCost(rental);
-            rental.setTotalCost(cost);
+            long minutesUsed = ChronoUnit.MINUTES.between(rental.getStartTime(), rental.getEndTime());
+
+            tariffStrategy.finish(rental, minutesUsed);
+            rental = rentalRepository.save(rental);
 
             scooterService.updateScooterStatus(scooter.getId(), ScooterStatus.AVAILABLE);
-            rentalRepository.save(rental);
 
-            RentalDto rentalDto = new RentalDto();
-            rentalDto.setId(rental.getId());
-            rentalDto.setUserId(rental.getUser().getId());
-            rentalDto.setScooterId(rental.getScooter().getId());
-            rentalDto.setStartTime(rental.getStartTime());
-            rentalDto.setEndTime(rental.getEndTime());
-            rentalDto.setStartMileage(rental.getStartMileage());
-            rentalDto.setEndMileage(rental.getEndMileage());
-            rentalDto.setTotalCost(rental.getTotalCost());
-            rentalDto.setTariffId(rental.getTariff().getId());
+            RentalDto rentalDto = convertToRentalDto(rental);
 
             logger.info("Аренда с ID {} успешно завершена.", id);
             return rentalDto;

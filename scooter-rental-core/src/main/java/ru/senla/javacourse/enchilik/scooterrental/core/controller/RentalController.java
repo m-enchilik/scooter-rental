@@ -2,17 +2,15 @@ package ru.senla.javacourse.enchilik.scooterrental.core.controller;
 
 import jakarta.validation.Valid;
 import java.util.List;
+
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 import ru.senla.javacourse.enchilik.scooterrental.api.dto.RentalDto;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.RentalNotFoundException;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.ScooterNotFoundException;
@@ -44,6 +42,16 @@ public class RentalController {
         throws RentalNotFoundException {
         RentalDto rental = rentalService.getRentalById(id);
         return new ResponseEntity<>(rental, HttpStatus.OK);
+    }
+
+    @PostMapping("/start")
+    @PreAuthorize("hasRole('USER') or hasRole('MANAGER') or hasRole('ADMIN')")
+    public ResponseEntity<RentalDto> startRental(
+            @RequestParam Long subscriptionId,
+            @RequestParam Long scooterId
+    ) throws RentalNotFoundException, ScooterNotFoundException {
+        RentalDto rentalDto = rentalService.startRental(subscriptionId, scooterId);
+        return new ResponseEntity<>(rentalDto, HttpStatus.OK);
     }
 
     @PutMapping("/{id}/end")

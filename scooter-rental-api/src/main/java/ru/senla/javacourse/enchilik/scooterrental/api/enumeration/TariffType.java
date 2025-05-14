@@ -2,8 +2,8 @@ package ru.senla.javacourse.enchilik.scooterrental.api.enumeration;
 
 public enum TariffType {
     BASIC("Basic tariff"),
-    HOURLY("Hourly tariff"),
-    FIFTY_MINUTES_A_MONTH("50 minutes a month");
+    HOURLY("Hourly tariff, single rent"),
+    PREPAID_MINUTES("Prepaid minutes, multiple rents, limited to a period");
 
     private String name;
 
