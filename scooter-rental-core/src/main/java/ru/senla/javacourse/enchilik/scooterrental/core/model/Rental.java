@@ -48,6 +48,14 @@ public class Rental {
     @JoinColumn(name = "tariff_id")
     private Tariff tariff;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "subscription_id")
+    private Subscription subscription;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "expiration_time")
+    private LocalDateTime expirationTime;
+
     public Long getId() {
         return id;
     }
@@ -118,5 +126,21 @@ public class Rental {
 
     public void setTariff(Tariff tariff) {
         this.tariff = tariff;
+    }
+
+    public Subscription getSubscription() {
+        return subscription;
+    }
+
+    public void setSubscription(Subscription subscription) {
+        this.subscription = subscription;
+    }
+
+    public LocalDateTime getExpirationTime() {
+        return expirationTime;
+    }
+
+    public void setExpirationTime(LocalDateTime expirationTime) {
+        this.expirationTime = expirationTime;
     }
 }

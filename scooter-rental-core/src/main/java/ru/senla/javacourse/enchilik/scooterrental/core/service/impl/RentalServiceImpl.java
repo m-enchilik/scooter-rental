@@ -141,14 +141,21 @@ public class RentalServiceImpl implements RentalService {
     public RentalDto startRental(Long subscriptionId, Long scooterId)
             throws SubscriptionNotFoundException, ScooterNotFoundException
     {
-        // TODO: 14.05.2025 Logger messages
+        logger.info("Попытка начать аренду по подписке ID: {}", subscriptionId);
+
         User user = getAuthorizedUser();
+
+
+        // TODO: 14.05.2025 Logger messages
 
         if (user.getRentBlocked()) {
             throw new UserRentalBlockedException("User can't get a rent: '%s'".formatted(user.getUsername()));
         }
+
         Subscription subscription = subscriptionRepository.findById(subscriptionId)
-                .orElseThrow(() -> new SubscriptionNotFoundException("subscription not found by id: '%s'".formatted(subscriptionId)));
+                .orElseThrow(() -> new SubscriptionNotFoundException(
+                    "subscription not found by id: '%s'".formatted(subscriptionId)
+                ));
 
         if (user.getId() != subscription.getUser().getId()) {
             throw new RuntimeException("Wrong subscription: different user");
@@ -204,7 +211,7 @@ public class RentalServiceImpl implements RentalService {
                 throw new IllegalArgumentException("Аренда уже завершена");
             }
 
-            Tariff tariff = rental.getTariff(); // TODO: Should be: rental.getSubscription().getTariff()
+            Tariff tariff = rental.getSubscription().getTariff();
             TariffStrategy tariffStrategy = tariffStrategyResolver.resolve(tariff.getType());
 
             rental.setEndTime(LocalDateTime.now());

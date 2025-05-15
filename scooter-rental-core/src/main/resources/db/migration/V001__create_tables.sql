@@ -59,6 +59,15 @@ CREATE TABLE scooters
     tariff_id       BIGINT REFERENCES tariffs (id)
 );
 
+CREATE TABLE subscriptions
+(
+    id                  BIGSERIAL PRIMARY KEY,
+    user_id             BIGINT REFERENCES users (id)    NOT NULL,
+    tariff_id           BIGINT REFERENCES tariffs (id)  NOT NULL,
+    expiration_time     TIMESTAMP,
+    rest_units          INTEGER
+);
+
 CREATE TABLE rentals
 (
     id            BIGSERIAL PRIMARY KEY,
@@ -69,14 +78,7 @@ CREATE TABLE rentals
     start_mileage DOUBLE PRECISION,
     end_mileage   DOUBLE PRECISION,
     total_cost    DECIMAL,
-    tariff_id     BIGINT REFERENCES tariffs (id)
+    subscription_id BIGINT REFERENCES subscriptions (id) NOT NULL,
+    expiration_time TIMESTAMP
 );
 
-CREATE TABLE subscriptions
-(
-    id                  BIGSERIAL PRIMARY KEY,
-    user_id             BIGINT REFERENCES users (id)    NOT NULL,
-    tariff_id           BIGINT REFERENCES tariffs (id)  NOT NULL,
-    expiration_time     TIMESTAMP,
-    rest_units          INTEGER
-);

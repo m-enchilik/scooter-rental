@@ -38,7 +38,7 @@ public class BasicTariffStrategy implements TariffStrategy {
 
     @Override
     public Rental finish(Rental rental, long minutesUsed) {
-        Tariff tariff = rental.getTariff(); // TODO: Should be: rental.getSubscription().getTariff()
+        Tariff tariff = rental.getSubscription().getTariff();
         BigDecimal totalCost = tariff.getPrice().multiply(BigDecimal.valueOf(minutesUsed));
         User user = rental.getUser();
         user.setDeposit(user.getDeposit().subtract(totalCost));
