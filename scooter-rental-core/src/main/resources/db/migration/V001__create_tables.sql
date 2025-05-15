@@ -9,6 +9,7 @@ CREATE TABLE users
     id           BIGSERIAL PRIMARY KEY,
     username     VARCHAR(50) UNIQUE NOT NULL,
     password     VARCHAR(255)       NOT NULL,
+    role         VARCHAR(50) NOT NULL,
     first_name   VARCHAR(50),
     last_name    VARCHAR(50),
     email        VARCHAR(100) UNIQUE,
@@ -16,13 +17,6 @@ CREATE TABLE users
     deposit      DECIMAL,
     user_blocked BOOLEAN,
     rent_blocked BOOLEAN
-);
-
-CREATE TABLE user_roles
-(
-    user_id BIGINT REFERENCES users (id),
-    REFERENCES roles (id),
-    PRIMARY KEY (user_id, role_id)
 );
 
 CREATE TABLE rental_points
