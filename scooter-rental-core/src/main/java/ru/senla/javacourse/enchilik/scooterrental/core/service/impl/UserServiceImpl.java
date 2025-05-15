@@ -17,7 +17,6 @@ import ru.senla.javacourse.enchilik.scooterrental.core.exception.UserAlreadyExis
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.UserNotFoundException;
 import ru.senla.javacourse.enchilik.scooterrental.core.model.Role;
 import ru.senla.javacourse.enchilik.scooterrental.core.model.User;
-import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.RoleRepository;
 import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.UserRepository;
 import ru.senla.javacourse.enchilik.scooterrental.core.service.UserService;
 
@@ -27,16 +26,13 @@ public class UserServiceImpl implements UserService {
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public UserServiceImpl(
         UserRepository userRepository,
-        RoleRepository roleRepository,
         @Lazy PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -65,9 +61,9 @@ public class UserServiceImpl implements UserService {
             user.setEmail(userDto.getEmail());
             user.setPhoneNumber(userDto.getPhoneNumber());
 
-            Role userRole = roleRepository.findByName("ROLE_USER");
+            Role userRole = Role.USER;
 
-            user.setRoles(Collections.singleton(userRole));
+            user.setRole(userRole);
 
             user = userRepository.save(user);
 
@@ -153,13 +149,8 @@ public class UserServiceImpl implements UserService {
                 user.setPhoneNumber(userDto.getPhoneNumber());
             }
 
-            if (userDto.getRoles() != null) {
-                Set<Role> newRoles = new HashSet<>();
-                for (String roleName : userDto.getRoles()) {
-                    Role role = roleRepository.findByName(roleName);
-                    newRoles.add(role);
-                }
-                user.setRoles(newRoles);
+            if (userDto.getRole() != null) {
+                user.setRole(Role.valueOf(userDto.getRole()));
             }
 
             userRepository.save(user);
@@ -242,7 +233,7 @@ public class UserServiceImpl implements UserService {
         dto.setLastName(user.getLastName());
         dto.setEmail(user.getEmail());
         dto.setPhoneNumber(user.getPhoneNumber());
-        dto.setRoles(user.getRoles().stream().map(Role::getName).collect(Collectors.toSet()));
+        dto.setRole(user.getRole().name());
         return dto;
     }
 }

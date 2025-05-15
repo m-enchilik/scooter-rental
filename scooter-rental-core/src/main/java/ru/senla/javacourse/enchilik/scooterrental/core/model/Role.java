@@ -1,36 +1,23 @@
 package ru.senla.javacourse.enchilik.scooterrental.core.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import org.springframework.security.core.GrantedAuthority;
 
-@Entity
-@Table(name = "roles")
-public class Role {
+public enum Role implements GrantedAuthority {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    ADMIN("ADMIN"),
+    MANAGER("MANAGER"),
+    USER("USER"),
+    ;
 
-    @Column(name = "name", unique = true, nullable = false, length = 50)
-    private String name;
+    private final String vale;
 
-    public Long getId() {
-        return id;
+    Role(String vale) {
+        this.vale = vale;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    @Override
+    public String getAuthority() {
+        return vale;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }
