@@ -4,12 +4,12 @@
 <hibernate-configuration>
     <session-factory>
         <!-- JDBC Database connection settings -->
-        <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
-        <property name="connection.url">jdbc:mysql://localhost:3306/book_warehouse?useSSL=false</property>
-        <property name="connection.username">root</property>
-        <property name="connection.password">testtest</property>
+        <property name="connection.driver_class">org.postgresql.Driver</property>
+        <property name="connection.url">jdbc:postgresql://localhost:5432/mydatabase</property>
+        <property name="connection.username">myuser</property>
+        <property name="connection.password">secret</property>
         <!-- JDBC connection pool settings ... using built-in test pool -->
-        <property name="connection.pool_size">10</property>
+        <property name="connection.pool_size">2</property>
         <!-- Select our SQL dialect -->
 <!--        <property name="dialect">org.hibernate.dialect.MySQLDialect</property>-->
         <!-- Echo the SQL to stdout -->
@@ -19,12 +19,12 @@
 
         <property name="hbm2ddl.auto">validate</property>
 
-        <mapping class="org.enchilik.model.Author"></mapping>
-        <mapping class="org.enchilik.model.Book"></mapping>
-        <mapping class="org.enchilik.model.Customer"></mapping>
-        <mapping class="org.enchilik.model.Order"></mapping>
-        <mapping class="org.enchilik.model.Request"></mapping>
-        <mapping class="org.enchilik.model.Sale"></mapping>
+        <mapping class="ru.senla.javacourse.enchilik.scooterrental.core.model.Scooter"></mapping>
+        <mapping class="ru.senla.javacourse.enchilik.scooterrental.core.model.Subscription"></mapping>
+        <mapping class="ru.senla.javacourse.enchilik.scooterrental.core.model.Rental"></mapping>
+        <mapping class="ru.senla.javacourse.enchilik.scooterrental.core.model.User"></mapping>
+        <mapping class="ru.senla.javacourse.enchilik.scooterrental.core.model.Tariff"></mapping>
+        <mapping class="ru.senla.javacourse.enchilik.scooterrental.core.model.RentalPoint"></mapping>
 
     </session-factory>
 </hibernate-configuration>
