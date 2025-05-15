@@ -1,4 +1,4 @@
-package ru.senla.javacourse.enchilik.scooterrental.application;
+package ru.senla.javacourse.enchilik.scooterrental;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
