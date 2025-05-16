@@ -33,6 +33,7 @@ public class UserDto {
     @Pattern(regexp = "\\d{10,20}", message = "Неверный формат номера телефона")
     private String phoneNumber;
 
+    @NotBlank(message = "Роль должна быть указана явно")
     private String role;
 
 

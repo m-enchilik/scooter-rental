@@ -38,6 +38,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserDto> registerUser(@Valid @RequestBody UserDto userDto)
         throws UserAlreadyExistsException {
         UserDto createdUser = userService.createUser(userDto);

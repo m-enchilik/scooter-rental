@@ -14,9 +14,6 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "subscriptions")
 public class Subscription {
-
-    //    TODO: А в итоге нужна она или это будет промежуточной таблицей и объект subscription надо удалить?
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
