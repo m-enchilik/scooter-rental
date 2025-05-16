@@ -6,10 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.senla.javacourse.enchilik.scooterrental.api.dto.RentalDto;
-import ru.senla.javacourse.enchilik.scooterrental.api.dto.ScooterDto;
 import ru.senla.javacourse.enchilik.scooterrental.api.dto.SubscriptionDto;
-import ru.senla.javacourse.enchilik.scooterrental.core.exception.RentalNotFoundException;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.SubscriptionNotFoundException;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.TariffNotFoundException;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.UserNotFoundException;
@@ -89,7 +86,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 .orElseThrow(() -> {
                     logger.warn("Подписка с ID {} не найдена.", id);
                     return new SubscriptionNotFoundException("Подписка с ID " + id + " не найдена");
-                    });
+                });
 
             SubscriptionDto subscriptionDto = convertToSubscriptionDto(subscription);
 

@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,9 +14,21 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.senla.javacourse.enchilik.scooterrental.api.dto.RentalDto;
 import ru.senla.javacourse.enchilik.scooterrental.api.enumeration.ScooterStatus;
-import ru.senla.javacourse.enchilik.scooterrental.core.exception.*;
-import ru.senla.javacourse.enchilik.scooterrental.core.model.*;
-import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.*;
+import ru.senla.javacourse.enchilik.scooterrental.core.exception.RentalNotFoundException;
+import ru.senla.javacourse.enchilik.scooterrental.core.exception.ScooterNotFoundException;
+import ru.senla.javacourse.enchilik.scooterrental.core.exception.SubscriptionNotFoundException;
+import ru.senla.javacourse.enchilik.scooterrental.core.exception.UserNotFoundException;
+import ru.senla.javacourse.enchilik.scooterrental.core.exception.UserRentalBlockedException;
+import ru.senla.javacourse.enchilik.scooterrental.core.model.Rental;
+import ru.senla.javacourse.enchilik.scooterrental.core.model.Scooter;
+import ru.senla.javacourse.enchilik.scooterrental.core.model.Subscription;
+import ru.senla.javacourse.enchilik.scooterrental.core.model.Tariff;
+import ru.senla.javacourse.enchilik.scooterrental.core.model.User;
+import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.RentalRepository;
+import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.ScooterRepository;
+import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.SubscriptionRepository;
+import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.TariffRepository;
+import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.UserRepository;
 import ru.senla.javacourse.enchilik.scooterrental.core.service.RentalService;
 import ru.senla.javacourse.enchilik.scooterrental.core.service.ScooterService;
 import ru.senla.javacourse.enchilik.scooterrental.core.tariff.TariffStrategy;
@@ -38,11 +49,11 @@ public class RentalServiceImpl implements RentalService {
 
     @Autowired
     public RentalServiceImpl(
-            RentalRepository rentalRepository,
-            UserRepository userRepository,
-            ScooterRepository scooterRepository,
-            ScooterService scooterService,
-            TariffRepository tariffRepository, SubscriptionRepository subscriptionRepository, TariffStrategyResolver tariffStrategyResolver) {
+        RentalRepository rentalRepository,
+        UserRepository userRepository,
+        ScooterRepository scooterRepository,
+        ScooterService scooterService,
+        TariffRepository tariffRepository, SubscriptionRepository subscriptionRepository, TariffStrategyResolver tariffStrategyResolver) {
         this.rentalRepository = rentalRepository;
         this.userRepository = userRepository;
         this.scooterRepository = scooterRepository;
@@ -139,8 +150,7 @@ public class RentalServiceImpl implements RentalService {
 
     @Override
     public RentalDto startRental(Long subscriptionId, Long scooterId)
-            throws SubscriptionNotFoundException, ScooterNotFoundException
-    {
+        throws SubscriptionNotFoundException, ScooterNotFoundException {
         logger.info("Попытка начать аренду по подписке ID: {}", subscriptionId);
 
         User user = getAuthorizedUser();
@@ -153,9 +163,9 @@ public class RentalServiceImpl implements RentalService {
         }
 
         Subscription subscription = subscriptionRepository.findById(subscriptionId)
-                .orElseThrow(() -> new SubscriptionNotFoundException(
-                    "subscription not found by id: '%s'".formatted(subscriptionId)
-                ));
+            .orElseThrow(() -> new SubscriptionNotFoundException(
+                "subscription not found by id: '%s'".formatted(subscriptionId)
+            ));
 
         if (user.getId() != subscription.getUser().getId()) {
             throw new RuntimeException("Wrong subscription: different user");
@@ -163,9 +173,9 @@ public class RentalServiceImpl implements RentalService {
         }
 
         Scooter scooter = scooterRepository
-                .findById(scooterId)
-                .orElseThrow(() ->
-                        new ScooterNotFoundException("scooter not found by id: '%s'".formatted(scooterId)));
+            .findById(scooterId)
+            .orElseThrow(() ->
+                new ScooterNotFoundException("scooter not found by id: '%s'".formatted(scooterId)));
 
         Tariff tariff = subscription.getTariff();
 
@@ -183,12 +193,6 @@ public class RentalServiceImpl implements RentalService {
         rental = rentalRepository.save(rental);
 
         return convertToRentalDto(rental);
-    }
-
-    private User getAuthorizedUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName());
-        return user;
     }
 
     @Override
@@ -317,6 +321,12 @@ public class RentalServiceImpl implements RentalService {
                 e);
             throw e;
         }
+    }
+
+    private User getAuthorizedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(authentication.getName());
+        return user;
     }
 
     private BigDecimal calculateCost(Rental rental) {

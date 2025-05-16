@@ -6,7 +6,6 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.DaoException;
-import ru.senla.javacourse.enchilik.scooterrental.core.model.Rental;
 import ru.senla.javacourse.enchilik.scooterrental.core.model.Subscription;
 
 @Repository

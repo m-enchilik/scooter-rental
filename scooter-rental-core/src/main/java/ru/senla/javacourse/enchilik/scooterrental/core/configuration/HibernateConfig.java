@@ -21,8 +21,8 @@ public class HibernateConfig {
 
     @Bean
     public SessionFactory sessionFactory(
-            JdbcConnectionDetails connectionDetails,
-            FlywayMigrationInitializer dependency // Чтобы запускалось строго после Flyway
+        JdbcConnectionDetails connectionDetails,
+        FlywayMigrationInitializer dependency // Чтобы запускалось строго после Flyway
     ) {
         org.hibernate.cfg.Configuration configuration = new org.hibernate.cfg.Configuration();
 
@@ -51,7 +51,7 @@ public class HibernateConfig {
         configuration.addAnnotatedClass(User.class);
 
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
-                .applySettings(configuration.getProperties()).build();
+            .applySettings(configuration.getProperties()).build();
 
         return configuration.buildSessionFactory(serviceRegistry);
     }

@@ -1,5 +1,7 @@
 package ru.senla.javacourse.enchilik.scooterrental.core.tariff;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import org.springframework.stereotype.Component;
 import ru.senla.javacourse.enchilik.scooterrental.core.model.Rental;
 import ru.senla.javacourse.enchilik.scooterrental.core.model.Subscription;
@@ -7,9 +9,6 @@ import ru.senla.javacourse.enchilik.scooterrental.core.model.Tariff;
 import ru.senla.javacourse.enchilik.scooterrental.core.model.User;
 import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.RentalRepository;
 import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.UserRepository;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @Component
 public class BasicTariffStrategy implements TariffStrategy {

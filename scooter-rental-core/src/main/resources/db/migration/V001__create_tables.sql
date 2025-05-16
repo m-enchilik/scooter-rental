@@ -12,7 +12,7 @@ CREATE TABLE users
     role         VARCHAR(50) NOT NULL,
     first_name   VARCHAR(50),
     last_name    VARCHAR(50),
-    email        VARCHAR(100) UNIQUE,
+    email        VARCHAR(100),
     phone_number VARCHAR(20),
     deposit      DECIMAL,
     user_blocked BOOLEAN,

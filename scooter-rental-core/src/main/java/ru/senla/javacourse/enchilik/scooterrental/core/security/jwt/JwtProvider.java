@@ -24,13 +24,13 @@ import ru.senla.javacourse.enchilik.scooterrental.core.model.User;
 
 @Component
 public class JwtProvider {
-    Logger log = LoggerFactory.getLogger(JwtProvider.class);
     private final SecretKey jwtAccessSecret;
     private final SecretKey jwtRefreshSecret;
+    Logger log = LoggerFactory.getLogger(JwtProvider.class);
 
     public JwtProvider(
-            @Value("${jwt.secret.access}") String jwtAccessSecret,
-            @Value("${jwt.secret.refresh}") String jwtRefreshSecret
+        @Value("${jwt.secret.access}") String jwtAccessSecret,
+        @Value("${jwt.secret.refresh}") String jwtRefreshSecret
     ) {
         this.jwtAccessSecret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtAccessSecret));
         this.jwtRefreshSecret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtRefreshSecret));
@@ -38,15 +38,15 @@ public class JwtProvider {
 
     public String generateAccessToken(@NonNull User user) {
         final LocalDateTime now = LocalDateTime.now();
-        final Instant accessExpirationInstant = now.plusMinutes(5).atZone(ZoneId.systemDefault()).toInstant();
+        final Instant accessExpirationInstant = now.plusMinutes(50).atZone(ZoneId.systemDefault()).toInstant();
         final Date accessExpiration = Date.from(accessExpirationInstant);
         return Jwts.builder()
-                .setSubject(user.getUsername())
-                .setExpiration(accessExpiration)
-                .signWith(jwtAccessSecret)
-                .claim("roles", List.of(user.getRole()))
-                .claim("firstName", user.getFirstName())
-                .compact();
+            .setSubject(user.getUsername())
+            .setExpiration(accessExpiration)
+            .signWith(jwtAccessSecret)
+            .claim("roles", List.of(user.getRole()))
+            .claim("firstName", user.getFirstName())
+            .compact();
     }
 
     public String generateRefreshToken(@NonNull User user) {
@@ -54,10 +54,10 @@ public class JwtProvider {
         final Instant refreshExpirationInstant = now.plusDays(30).atZone(ZoneId.systemDefault()).toInstant();
         final Date refreshExpiration = Date.from(refreshExpirationInstant);
         return Jwts.builder()
-                .setSubject(user.getUsername())
-                .setExpiration(refreshExpiration)
-                .signWith(jwtRefreshSecret)
-                .compact();
+            .setSubject(user.getUsername())
+            .setExpiration(refreshExpiration)
+            .signWith(jwtRefreshSecret)
+            .compact();
     }
 
     public boolean validateAccessToken(@NonNull String accessToken) {
@@ -68,12 +68,20 @@ public class JwtProvider {
         return validateToken(refreshToken, jwtRefreshSecret);
     }
 
+    public Claims getAccessClaims(@NonNull String token) {
+        return getClaims(token, jwtAccessSecret);
+    }
+
+    public Claims getRefreshClaims(@NonNull String token) {
+        return getClaims(token, jwtRefreshSecret);
+    }
+
     private boolean validateToken(@NonNull String token, @NonNull Key secret) {
         try {
             Jwts.parserBuilder()
-                    .setSigningKey(secret)
-                    .build()
-                    .parseClaimsJws(token);
+                .setSigningKey(secret)
+                .build()
+                .parseClaimsJws(token);
             return true;
         } catch (ExpiredJwtException expEx) {
             log.error("Token expired", expEx);
@@ -89,20 +97,12 @@ public class JwtProvider {
         return false;
     }
 
-    public Claims getAccessClaims(@NonNull String token) {
-        return getClaims(token, jwtAccessSecret);
-    }
-
-    public Claims getRefreshClaims(@NonNull String token) {
-        return getClaims(token, jwtRefreshSecret);
-    }
-
     private Claims getClaims(@NonNull String token, @NonNull Key secret) {
         return Jwts.parserBuilder()
-                .setSigningKey(secret)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+            .setSigningKey(secret)
+            .build()
+            .parseClaimsJws(token)
+            .getBody();
     }
 
 }

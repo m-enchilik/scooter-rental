@@ -44,9 +44,11 @@ public abstract class AbstractDao<T, K extends Serializable> implements Dao<T, K
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             T entity = session.get(getEntityClass(), entityK);
+            if (entity != null) {
+                fillLazyFields(entity);
+            }
             transaction.commit();
-            fillLazyFields(entity);
-            return Optional.of(entity);
+            return Optional.ofNullable(entity);
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
@@ -75,7 +77,12 @@ public abstract class AbstractDao<T, K extends Serializable> implements Dao<T, K
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
-            session.delete(entityK);
+            Optional<T> entity = findById(entityK);
+            if (entity.isEmpty()) {
+                logger.error("Entity not exists");
+                return;
+            }
+            session.remove(entity.get());
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) {

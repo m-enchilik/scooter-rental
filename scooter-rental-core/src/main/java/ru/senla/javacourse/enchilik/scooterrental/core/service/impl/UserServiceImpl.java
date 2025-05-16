@@ -1,10 +1,7 @@
 package ru.senla.javacourse.enchilik.scooterrental.core.service.impl;
 
 import jakarta.transaction.Transactional;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
