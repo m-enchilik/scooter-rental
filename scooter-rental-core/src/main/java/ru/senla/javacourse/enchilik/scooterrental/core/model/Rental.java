@@ -45,15 +45,10 @@ public class Rental {
     private BigDecimal totalCost;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tariff_id")
-    private Tariff tariff;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subscription_id")
     private Subscription subscription;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "expiration_time")
+    @Column(name = "expiration_time")
     private LocalDateTime expirationTime;
 
     public Long getId() {
@@ -118,14 +113,6 @@ public class Rental {
 
     public void setTotalCost(BigDecimal totalCost) {
         this.totalCost = totalCost;
-    }
-
-    public Tariff getTariff() {
-        return tariff;
-    }
-
-    public void setTariff(Tariff tariff) {
-        this.tariff = tariff;
     }
 
     public Subscription getSubscription() {

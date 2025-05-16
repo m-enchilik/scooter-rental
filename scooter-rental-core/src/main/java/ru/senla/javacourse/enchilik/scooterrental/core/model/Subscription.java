@@ -12,7 +12,7 @@ import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "subscription")
+@Table(name = "subscriptions")
 public class Subscription {
 
     //    TODO: А в итоге нужна она или это будет промежуточной таблицей и объект subscription надо удалить?

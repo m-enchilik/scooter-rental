@@ -28,7 +28,7 @@ public class RentalDto {
 
     private BigDecimal totalCost;
 
-    private Long tariffId;
+    private Long subscriptionId;
 
     private String tariffName;
 
@@ -112,12 +112,12 @@ public class RentalDto {
         this.totalCost = totalCost;
     }
 
-    public Long getTariffId() {
-        return tariffId;
+    public Long getSubscriptionId() {
+        return subscriptionId;
     }
 
-    public void setTariffId(Long tariffId) {
-        this.tariffId = tariffId;
+    public void setSubscriptionId(Long subscriptionId) {
+        this.subscriptionId = subscriptionId;
     }
 
     public String getTariffName() {

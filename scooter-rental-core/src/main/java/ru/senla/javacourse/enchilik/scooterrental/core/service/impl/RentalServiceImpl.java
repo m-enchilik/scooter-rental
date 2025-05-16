@@ -90,17 +90,17 @@ public class RentalServiceImpl implements RentalService {
                 throw new IllegalArgumentException("Самокат недоступен для аренды");
             }
 
-            Tariff tariff =
-                tariffRepository
-                    .findById(rentalDto.getTariffId())
-                    .orElseThrow(() -> new IllegalArgumentException("Тариф не найден"));
+            Subscription subscription =
+                subscriptionRepository
+                    .findById(rentalDto.getSubscriptionId())
+                    .orElseThrow(() -> new IllegalArgumentException("Подписка не найдена"));
 
             Rental rental = new Rental();
             rental.setUser(user);
             rental.setScooter(scooter);
             rental.setStartTime(rentalDto.getStartTime());
             rental.setStartMileage(scooter.getMileage());
-            rental.setTariff(tariff);
+            rental.setSubscription(subscription);
 
             scooterService.updateScooterStatus(scooter.getId(), ScooterStatus.IN_USE);
 
@@ -352,9 +352,9 @@ public class RentalServiceImpl implements RentalService {
         dto.setStartMileage(rental.getStartMileage());
         dto.setEndMileage(rental.getEndMileage());
         dto.setTotalCost(rental.getTotalCost());
-        if (rental.getTariff() != null) {
-            dto.setTariffId(rental.getTariff().getId());
-            dto.setTariffName(rental.getTariff().getName());
+        if (rental.getSubscription() != null) {
+            dto.setSubscriptionId(rental.getSubscription().getId());
+            dto.setTariffName(rental.getSubscription().getTariff().getName());
         }
         return dto;
     }

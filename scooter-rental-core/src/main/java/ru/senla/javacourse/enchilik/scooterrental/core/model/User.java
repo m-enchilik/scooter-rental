@@ -12,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -44,7 +45,7 @@ public class User {
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private Subscription subscription;
+    private List<Subscription> subscription;
 
     @Column(name = "deposit")
     private BigDecimal deposit;
@@ -141,5 +142,13 @@ public class User {
 
     public void setRentBlocked(Boolean rentBlocked) {
         this.rentBlocked = rentBlocked;
+    }
+
+    public List<Subscription> getSubscription() {
+        return subscription;
+    }
+
+    public void setSubscription(List<Subscription> subscription) {
+        this.subscription = subscription;
     }
 }
