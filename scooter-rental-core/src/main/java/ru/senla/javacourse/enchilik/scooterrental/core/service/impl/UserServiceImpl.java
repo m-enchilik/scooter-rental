@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
             user.setEmail(userDto.getEmail());
             user.setPhoneNumber(userDto.getPhoneNumber());
 
-            Role userRole = Role.USER;
+            Role userRole = Role.valueOf(userDto.getRole());
 
             user.setRole(userRole);
 
