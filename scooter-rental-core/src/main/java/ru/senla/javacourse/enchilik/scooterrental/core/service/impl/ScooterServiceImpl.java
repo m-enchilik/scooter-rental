@@ -75,22 +75,6 @@ public class ScooterServiceImpl implements ScooterService {
                             });
                 scooter.setRentalPoint(rentalPoint);
             }
-            if (scooterDto.getTariffId() != null) {
-                Tariff tariff =
-                    tariffRepository
-                        .findById(scooterDto.getTariffId())
-                        .orElseThrow(
-                            () -> {
-                                logger.error(
-                                    "Тариф с ID {} не найден.",
-                                    scooterDto.getTariffId());
-                                return new TariffNotFoundException(
-                                    "Тариф с ID "
-                                        + scooterDto.getTariffId()
-                                        + " не найден");
-                            });
-                scooter.setTariff(tariff);
-            }
 
             scooter = scooterRepository.save(scooter);
             scooterDto.setId(scooter.getId());
@@ -182,26 +166,9 @@ public class ScooterServiceImpl implements ScooterService {
                 scooter.setRentalPoint(rentalPoint);
             }
 
-            if (scooterDto.getTariffId() != null) {
-                Tariff tariff =
-                    tariffRepository
-                        .findById(scooterDto.getTariffId())
-                        .orElseThrow(
-                            () -> {
-                                logger.error(
-                                    "Тариф с ID {} не найден.",
-                                    scooterDto.getTariffId());
-                                return new TariffNotFoundException(
-                                    "Тариф с ID "
-                                        + scooterDto.getTariffId()
-                                        + " не найден");
-                            });
-                scooter.setTariff(tariff);
-            }
-
-            scooterRepository.save(scooter);
+            scooter = scooterRepository.save(scooter);
             logger.info("Самокат с ID {} успешно обновлен.", id);
-            return scooterDto;
+            return convertToScooterDto(scooter);
         } catch (Exception e) {
             logger.error("Ошибка при обновлении самоката с ID {}: {}", id, e.getMessage(), e);
             throw e;
@@ -241,6 +208,7 @@ public class ScooterServiceImpl implements ScooterService {
                     .collect(Collectors.toList());
             logger.info("Получено {} самокатов.", scooters.size());
             return scooters;
+            // TODO добавить нормальную ошибку
         } catch (Exception e) {
             logger.error("Ошибка при получении всех самокатов: {}", e.getMessage(), e);
             throw e;
@@ -316,10 +284,6 @@ public class ScooterServiceImpl implements ScooterService {
         if (scooter.getRentalPoint() != null) {
             dto.setRentalPointId(scooter.getRentalPoint().getId());
             dto.setRentalPointName(scooter.getRentalPoint().getName());
-        }
-        if (scooter.getTariff() != null) {
-            dto.setTariffId(scooter.getTariff().getId());
-            dto.setTariffName(scooter.getTariff().getName());
         }
         return dto;
     }

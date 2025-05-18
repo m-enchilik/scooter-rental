@@ -5,6 +5,7 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -26,6 +27,7 @@ public abstract class AbstractDao<T, K extends Serializable> implements Dao<T, K
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             T persisted = session.merge(entity);
+            fillLazyFields(persisted);
             transaction.commit();
             return persisted;
         } catch (Exception e) {

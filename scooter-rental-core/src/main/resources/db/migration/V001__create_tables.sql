@@ -50,7 +50,7 @@ CREATE TABLE scooters
 (
     id              BIGSERIAL          PRIMARY KEY,
     model           VARCHAR(100)       NOT NULL,
-    serial_number   VARCHAR(50) UNIQUE NOT NULL,
+    serial_number   VARCHAR(50)        NOT NULL,
     status          VARCHAR(20)        NOT NULL,
     charge_level    INTEGER            NOT NULL,
     mileage         DOUBLE PRECISION,

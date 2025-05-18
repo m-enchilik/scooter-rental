@@ -1,6 +1,7 @@
 package ru.senla.javacourse.enchilik.scooterrental.core.reposirory;
 
 import java.util.List;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -55,5 +56,10 @@ public class ScooterRepository extends AbstractDao<Scooter, Long> {
             logger.error("Can't find scooters by serial number: '{}'", serialNumber, e);
             return false;
         }
+    }
+
+    @Override
+    protected void fillLazyFields(Scooter entity) {
+        Hibernate.initialize(entity.getRentalPoint());
     }
 }

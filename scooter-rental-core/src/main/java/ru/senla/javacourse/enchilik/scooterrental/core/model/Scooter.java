@@ -41,10 +41,6 @@ public class Scooter {
     @JoinColumn(name = "rental_point_id")
     private RentalPoint rentalPoint;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tariff_id")
-    private Tariff tariff;
-
     public Long getId() {
         return id;
     }
@@ -99,13 +95,5 @@ public class Scooter {
 
     public void setRentalPoint(RentalPoint rentalPoint) {
         this.rentalPoint = rentalPoint;
-    }
-
-    public Tariff getTariff() {
-        return tariff;
-    }
-
-    public void setTariff(Tariff tariff) {
-        this.tariff = tariff;
     }
 }

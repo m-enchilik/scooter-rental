@@ -12,18 +12,18 @@ public class ScooterDto {
 
     private Long id;
 
-    @NotBlank(message = "Модель не может быть пустой")
+//    @NotBlank(message = "Модель не может быть пустой")
     @Size(max = 100, message = "Модель не может превышать 100 символов")
     private String model;
 
-    @NotBlank(message = "Серийный номер не может быть пустым")
+//    @NotBlank(message = "Серийный номер не может быть пустым")
     @Size(max = 50, message = "Серийный номер не может превышать 50 символов")
     private String serialNumber;
 
-    @NotNull(message = "Статус не может быть null")
+//    @NotNull(message = "Статус не может быть null")
     private ScooterStatus status;
 
-    @NotNull(message = "Уровень заряда не может быть null")
+//    @NotNull(message = "Уровень заряда не может быть null")
     @Min(value = 0, message = "Уровень заряда не может быть отрицательным")
     @Max(value = 100, message = "Уровень заряда не может превышать 100")
     private Integer chargeLevel;
@@ -34,10 +34,6 @@ public class ScooterDto {
     private Long rentalPointId;
 
     private String rentalPointName;
-
-    private Long tariffId;
-
-    private String tariffName;
 
     public Long getId() {
         return id;
@@ -101,21 +97,5 @@ public class ScooterDto {
 
     public void setRentalPointName(String rentalPointName) {
         this.rentalPointName = rentalPointName;
-    }
-
-    public Long getTariffId() {
-        return tariffId;
-    }
-
-    public void setTariffId(Long tariffId) {
-        this.tariffId = tariffId;
-    }
-
-    public String getTariffName() {
-        return tariffName;
-    }
-
-    public void setTariffName(String tariffName) {
-        this.tariffName = tariffName;
     }
 }
