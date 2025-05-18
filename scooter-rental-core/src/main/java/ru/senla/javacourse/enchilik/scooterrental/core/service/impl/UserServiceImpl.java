@@ -2,6 +2,7 @@ package ru.senla.javacourse.enchilik.scooterrental.core.service.impl;
 
 import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,9 +59,11 @@ public class UserServiceImpl implements UserService {
             user.setEmail(userDto.getEmail());
             user.setPhoneNumber(userDto.getPhoneNumber());
 
-            Role userRole = Role.valueOf(userDto.getRole());
+            Set<Role> roles = userDto.getRoles().stream()
+                    .map(Role::valueOf)
+                    .collect(Collectors.toSet());
 
-            user.setRole(userRole);
+            user.setRoles(roles);
 
             user = userRepository.save(user);
 
@@ -146,8 +149,12 @@ public class UserServiceImpl implements UserService {
                 user.setPhoneNumber(userDto.getPhoneNumber());
             }
 
-            if (userDto.getRole() != null) {
-                user.setRole(Role.valueOf(userDto.getRole()));
+            if (userDto.getRoles() != null) {
+                Set<Role> roles = userDto.getRoles().stream()
+                        .map(Role::valueOf)
+                        .collect(Collectors.toSet());
+
+                user.setRoles(roles);
             }
 
             userRepository.save(user);
@@ -230,7 +237,10 @@ public class UserServiceImpl implements UserService {
         dto.setLastName(user.getLastName());
         dto.setEmail(user.getEmail());
         dto.setPhoneNumber(user.getPhoneNumber());
-        dto.setRole(user.getRole().name());
+        dto.setRoles(user.getRoles()
+                .stream()
+                .map(Role::name)
+                .collect(Collectors.toSet()));
         return dto;
     }
 }

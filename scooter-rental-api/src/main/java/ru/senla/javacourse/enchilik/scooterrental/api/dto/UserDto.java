@@ -4,6 +4,9 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class UserDto {
     private Long id;
     // для возможности частичного обновления данных
@@ -32,7 +35,7 @@ public class UserDto {
     private String phoneNumber;
 
     //    @NotBlank(message = "Роль должна быть указана явно")
-    private String role;
+    private Set<String> roles = new HashSet<>();
 
 
     private String deposit;
@@ -97,12 +100,12 @@ public class UserDto {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getRole() {
-        return role;
+    public Set<String> getRoles() {
+        return roles;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setRoles(Set<String> roles) {
+        this.roles = roles;
     }
 
     public String getDeposit() {

@@ -10,7 +10,7 @@
     </parent>
     <groupId>ru.senla.javacourse.enchilik</groupId>
     <artifactId>scooter-rental</artifactId>
-    <version>${project.version}</version>
+    <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>scooter-rental</name>
     <description>Scooter rental app</description>

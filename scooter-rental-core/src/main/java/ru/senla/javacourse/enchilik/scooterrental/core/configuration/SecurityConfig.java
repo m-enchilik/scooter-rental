@@ -40,8 +40,8 @@ public class SecurityConfig {
             .sessionManagement(cfg -> cfg.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(
                 auth -> auth
-                    .requestMatchers("/api/auth/login", "/api/auth/token").permitAll()
-                    .anyRequest().authenticated()
+                    .requestMatchers("/api/auth/login", "/api/auth/token")
+                        .permitAll().anyRequest().authenticated()
             )
             .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class)
             .build();

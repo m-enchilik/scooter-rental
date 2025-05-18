@@ -34,7 +34,7 @@ public class ScooterController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('MANAGER') or hasAuthority('ADMIN')")
     public ResponseEntity<ScooterDto> createScooter(@Valid @RequestBody ScooterDto scooterDto)
         throws RentalPointNotFoundException {
         ScooterDto createdScooter = scooterService.createScooter(scooterDto);
@@ -49,7 +49,7 @@ public class ScooterController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('MANAGER') or hasAuthority('ADMIN')")
     public ResponseEntity<ScooterDto> updateScooter(
         @PathVariable Long id, @Valid @RequestBody ScooterDto scooterDto)
         throws ScooterNotFoundException, RentalPointNotFoundException {
@@ -58,7 +58,7 @@ public class ScooterController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('MANAGER') or hasAuthority('ADMIN')")
     public ResponseEntity<Void> deleteScooter(@PathVariable Long id)
         throws ScooterNotFoundException {
         scooterService.deleteScooter(id);
@@ -79,7 +79,7 @@ public class ScooterController {
     }
 
     @PatchMapping("/{id}/status")
-    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('MANAGER') or hasAuthority('ADMIN')")
     public ResponseEntity<Void> updateScooterStatus(
         @PathVariable Long id, @RequestParam ScooterStatus newStatus)
         throws ScooterNotFoundException {
