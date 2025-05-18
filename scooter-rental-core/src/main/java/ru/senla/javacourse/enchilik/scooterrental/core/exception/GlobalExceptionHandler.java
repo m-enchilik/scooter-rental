@@ -99,14 +99,4 @@ public class GlobalExceptionHandler {
             new ErrorResponse(HttpStatus.METHOD_NOT_ALLOWED.value(), "Method not allowed");
         return new ResponseEntity<>(response, HttpStatus.METHOD_NOT_ALLOWED);
     }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGlobalException(Exception ex) {
-        logger.error("An unexpected error occurred: {}", ex.getMessage(), ex);
-        ErrorResponse response =
-            new ErrorResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "An unexpected error occurred. Please contact support.");
-        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
 }
