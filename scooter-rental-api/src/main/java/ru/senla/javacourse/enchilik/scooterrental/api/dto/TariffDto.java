@@ -1,7 +1,5 @@
 package ru.senla.javacourse.enchilik.scooterrental.api.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
@@ -13,7 +11,7 @@ public class TariffDto {
 
     private TariffType type;
 
-    @NotBlank(message = "Название тарифа не может быть пустым")
+//    @NotBlank(message = "Название тарифа не может быть пустым")
     @Size(max = 50, message = "Название тарифа не может превышать 50 символов")
     private String name;
 
@@ -27,7 +25,7 @@ public class TariffDto {
 
     private Integer validityPeriodHours;
 
-    @NotNull(message = "Поле 'isSubscription' не может быть null")
+//    @NotNull(message = "Поле 'isSubscription' не может быть null")
     private Boolean isSubscription;
 
     public Long getId() {
@@ -62,11 +60,11 @@ public class TariffDto {
         this.description = description;
     }
 
-    public BigDecimal getIsSubscriptionPrice() {
+    public BigDecimal getSubscriptionPrice() {
         return subscriptionPrice;
     }
 
-    public void setIsSubscriptionPrice(BigDecimal subscriptionPrice) {
+    public void setSubscriptionPrice(BigDecimal subscriptionPrice) {
         this.subscriptionPrice = subscriptionPrice;
     }
 

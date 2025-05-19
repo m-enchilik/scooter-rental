@@ -31,14 +31,14 @@ public class TariffServiceImpl implements TariffService {
         logger.info("Попытка создать новый тариф с данными: {}", tariffDto);
         try {
             Tariff tariff = new Tariff();
+            tariff.setType(tariffDto.getType());
             tariff.setName(tariffDto.getName());
             tariff.setDescription(tariffDto.getDescription());
-
-            //            TODO: доработать
-            //            tariff.setPricePerHour(tariffDto.getPricePerHour());
-            tariff.setPrice(tariffDto.getIsSubscriptionPrice());
-            //            tariff.setDiscount(tariffDto.getDiscount());
+            tariff.setPrice(tariffDto.getSubscriptionPrice());
+            tariff.setUnitsIncluded(tariffDto.getUnitsIncluded());
+            tariff.setValidityPeriodHours(tariffDto.getValidityPeriodHours());
             tariff.setIsSubscription(tariffDto.getIsSubscription());
+
 
             tariff = tariffRepository.save(tariff);
             tariffDto.setId(tariff.getId());
@@ -99,8 +99,8 @@ public class TariffServiceImpl implements TariffService {
             //            if (tariffDto.getPricePerHour() != null) {
             //                tariff.setPricePerHour(tariffDto.getPricePerHour());
             //            }
-            if (tariffDto.getIsSubscriptionPrice() != null) {
-                tariff.setPrice(tariffDto.getIsSubscriptionPrice());
+            if (tariffDto.getSubscriptionPrice() != null) {
+                tariff.setPrice(tariffDto.getSubscriptionPrice());
             }
             //            if (tariffDto.getDiscount() != null) {
             //                tariff.setDiscount(tariffDto.getDiscount());
@@ -161,12 +161,12 @@ public class TariffServiceImpl implements TariffService {
     private TariffDto convertToTariffDto(Tariff tariff) {
         TariffDto dto = new TariffDto();
         dto.setId(tariff.getId());
+        dto.setType(tariff.getType());
         dto.setName(tariff.getName());
         dto.setDescription(tariff.getDescription());
-        //            TODO: доработать
-        //        dto.setPricePerHour(tariff.getPricePerHour());
-        dto.setIsSubscriptionPrice(tariff.getPrice());
-        //        dto.setDiscount(tariff.getDiscount());
+        dto.setSubscriptionPrice(tariff.getPrice());
+        dto.setUnitsIncluded(tariff.getUnitsIncluded());
+        dto.setValidityPeriodHours(tariff.getValidityPeriodHours());
         dto.setIsSubscription(tariff.getIsSubscription());
         return dto;
     }

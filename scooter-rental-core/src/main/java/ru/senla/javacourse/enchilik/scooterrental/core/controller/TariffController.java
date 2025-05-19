@@ -30,7 +30,7 @@ public class TariffController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('MANAGER') or hasAuthority('ADMIN')")
     public ResponseEntity<TariffDto> createTariff(@Valid @RequestBody TariffDto tariffDto) {
         TariffDto createdTariff = tariffService.createTariff(tariffDto);
         return new ResponseEntity<>(createdTariff, HttpStatus.CREATED);
@@ -44,7 +44,7 @@ public class TariffController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('MANAGER') or hasAuthority('ADMIN')")
     public ResponseEntity<TariffDto> updateTariff(
         @PathVariable Long id, @Valid @RequestBody TariffDto tariffDto)
         throws TariffNotFoundException {
@@ -53,7 +53,7 @@ public class TariffController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('MANAGER') or hasAuthority('ADMIN')")
     public ResponseEntity<Void> deleteTariff(@PathVariable Long id) throws TariffNotFoundException {
         tariffService.deleteTariff(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
