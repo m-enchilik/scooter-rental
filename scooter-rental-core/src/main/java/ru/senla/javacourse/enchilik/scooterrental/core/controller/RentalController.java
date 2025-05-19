@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +21,8 @@ import ru.senla.javacourse.enchilik.scooterrental.core.exception.RentalNotFoundE
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.RentalPointNotFoundException;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.ScooterNotFoundException;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.UserNotFoundException;
+import ru.senla.javacourse.enchilik.scooterrental.core.model.User;
+import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.UserRepository;
 import ru.senla.javacourse.enchilik.scooterrental.core.service.RentalService;
 import ru.senla.javacourse.enchilik.scooterrental.core.service.SecurityService;
 
@@ -28,12 +31,12 @@ import ru.senla.javacourse.enchilik.scooterrental.core.service.SecurityService;
 public class RentalController {
 
     private final RentalService rentalService;
-    private final SecurityService securityService;
+    private final UserRepository userRepository;
 
     @Autowired
-    public RentalController(RentalService rentalService, SecurityService securityService) {
+    public RentalController(RentalService rentalService, UserRepository userRepository) {
         this.rentalService = rentalService;
-        this.securityService = securityService;
+        this.userRepository = userRepository;
     }
 
     @PostMapping
@@ -101,8 +104,9 @@ public class RentalController {
     }
 
     @GetMapping("/my")
-    public ResponseEntity<List<RentalDto>> getRentalsByUser() {
-        Long userId = securityService.getAuthorizedUser().getId();
+    public ResponseEntity<List<RentalDto>> getRentalsByUser(@AuthenticationPrincipal String userName) {
+        User user = userRepository.findByUsername(userName);
+        Long userId = user.getId();
         List<RentalDto> rentals = rentalService.getRentalsByUser(userId);
         return new ResponseEntity<>(rentals, HttpStatus.OK);
     }
