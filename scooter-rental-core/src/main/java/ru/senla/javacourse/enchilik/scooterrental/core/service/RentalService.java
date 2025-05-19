@@ -11,6 +11,8 @@ public interface RentalService {
     RentalDto save(RentalDto rentalDto)
         throws UserNotFoundException, ScooterNotFoundException;
 
+    RentalDto update(Long id, RentalDto rentalDto) throws RentalNotFoundException;
+
     RentalDto getRentalById(Long id) throws RentalNotFoundException;
 
     RentalDto startRental(Long subscriptionId, Long scooterId)

@@ -1,6 +1,7 @@
 package ru.senla.javacourse.enchilik.scooterrental.core.model;
 
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -44,7 +45,7 @@ public class Rental {
     @Column(name = "total_cost")
     private BigDecimal totalCost;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "subscription_id")
     private Subscription subscription;
 

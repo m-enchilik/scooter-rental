@@ -9,9 +9,13 @@ public interface TariffStrategy {
     /**
      * сколько минут можно проехать на данном тарифе
      */
-    int predictTimeLimitMinutes(User user, Subscription subscription);
+    long predictTimeLimitMinutes(User user, Subscription subscription);
 
-    LocalDateTime getTimeLimit(User user, Subscription subscription);
+    default LocalDateTime getTimeLimit(User user, Subscription subscription) {
+        Long timeLimitMinutes = predictTimeLimitMinutes(user, subscription);
+
+        return LocalDateTime.now().plusMinutes(timeLimitMinutes);
+    }
 
     Rental finish(Rental rental, long minutesUsed);
 }

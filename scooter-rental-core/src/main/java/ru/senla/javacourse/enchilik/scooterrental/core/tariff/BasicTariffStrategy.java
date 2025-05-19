@@ -22,17 +22,10 @@ public class BasicTariffStrategy implements TariffStrategy {
     }
 
     @Override
-    public int predictTimeLimitMinutes(User user, Subscription subscription) {
+    public long predictTimeLimitMinutes(User user, Subscription subscription) {
         BigDecimal deposit = user.getDeposit();
         BigDecimal price = subscription.getTariff().getPrice();
         return deposit.divideToIntegralValue(price).intValue();
-    }
-
-    @Override
-    public LocalDateTime getTimeLimit(User user, Subscription subscription) {
-        int timeLimitMinutes = predictTimeLimitMinutes(user, subscription);
-
-        return LocalDateTime.now().plusMinutes(timeLimitMinutes);
     }
 
     @Override

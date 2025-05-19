@@ -91,6 +91,13 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(SubscriptionWrongUserException.class)
+    public ResponseEntity<ErrorResponse> handleSubscriptionWrongUserException(SubscriptionWrongUserException ex) {
+        logger.error("Rental has wrong subscription: different user: {}", ex.getMessage());
+        ErrorResponse response = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ErrorResponse> handleHttpRequestMethodNotSupportedException(
         HttpRequestMethodNotSupportedException ex) {

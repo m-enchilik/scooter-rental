@@ -57,6 +57,5 @@ public class RentalPointRepository extends AbstractDao<RentalPoint, Long> {
     @Override
     protected void fillLazyFields(RentalPoint entity) {
         Hibernate.initialize(entity.getChildPoints());
-//        Hibernate.initialize(entity.getScooters());
     }
 }

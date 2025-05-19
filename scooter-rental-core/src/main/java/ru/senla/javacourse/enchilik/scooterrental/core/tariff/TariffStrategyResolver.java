@@ -13,8 +13,8 @@ public class TariffStrategyResolver {
 
     static {
         classes.put(TariffType.BASIC, BasicTariffStrategy.class);
-        //        classes.put(TariffType.HOURLY, HourlyTariffStrategy.class);
-        //        classes.put(TariffType.PREPAID_MINUTES, PrepaudMinutesTariffStrategy.class);
+                classes.put(TariffType.HOURLY, HourlyTariffStrategy.class);
+                classes.put(TariffType.PREPAID_MINUTES, PrepaidMinutesTariffStrategy.class);
     }
 
     private final Map<TariffType, TariffStrategy> strategyBeans = new EnumMap<>(TariffType.class);

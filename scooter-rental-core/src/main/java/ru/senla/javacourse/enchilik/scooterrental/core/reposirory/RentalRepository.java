@@ -1,6 +1,7 @@
 package ru.senla.javacourse.enchilik.scooterrental.core.reposirory;
 
 import java.util.List;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -52,5 +53,13 @@ public class RentalRepository extends AbstractDao<Rental, Long> {
             logger.error("Can't find rentals by scooter id: '{}'", scooterId, e);
             throw new DaoException(e);
         }
+    }
+
+    @Override
+    protected void fillLazyFields(Rental entity) {
+        Hibernate.initialize(entity.getScooter());
+        Hibernate.initialize(entity.getUser());
+        Hibernate.initialize(entity.getSubscription());
+        Hibernate.initialize(entity.getSubscription().getTariff());
     }
 }

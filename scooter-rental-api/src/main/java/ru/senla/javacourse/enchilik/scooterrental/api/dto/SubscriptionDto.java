@@ -14,7 +14,7 @@ public class SubscriptionDto {
 
     private LocalDateTime expirationTime;
 
-    private Integer restUnits;
+    private Long restUnits;
 
     public Long getId() {
         return id;
@@ -48,11 +48,11 @@ public class SubscriptionDto {
         this.expirationTime = expirationTime;
     }
 
-    public Integer getRestUnits() {
+    public Long getRestUnits() {
         return restUnits;
     }
 
-    public void setRestUnits(Integer restUnits) {
+    public void setRestUnits(Long restUnits) {
         this.restUnits = restUnits;
     }
 }

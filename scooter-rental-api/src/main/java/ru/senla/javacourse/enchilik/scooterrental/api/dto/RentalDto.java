@@ -11,7 +11,7 @@ public class RentalDto {
     @NotNull(message = "ID пользователя не может быть null")
     private Long userId;
 
-    private String userUsername;
+    private String username;
 
     @NotNull(message = "ID самоката не может быть null")
     private Long scooterId;
@@ -48,12 +48,12 @@ public class RentalDto {
         this.userId = userId;
     }
 
-    public String getUserUsername() {
-        return userUsername;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserUsername(String userUsername) {
-        this.userUsername = userUsername;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public Long getScooterId() {

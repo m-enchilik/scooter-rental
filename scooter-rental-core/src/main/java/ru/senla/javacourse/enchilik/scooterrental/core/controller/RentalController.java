@@ -32,15 +32,23 @@ public class RentalController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('USER') or hasRole('MANAGER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('MANAGER') or hasAuthority('ADMIN')")
     public ResponseEntity<RentalDto> createRental(@Valid @RequestBody RentalDto rentalDto)
         throws UserNotFoundException, ScooterNotFoundException {
         RentalDto createdRental = rentalService.save(rentalDto);
         return new ResponseEntity<>(createdRental, HttpStatus.CREATED);
     }
 
+    @PutMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<RentalDto> updateRental(@PathVariable Long id, @Valid @RequestBody RentalDto rentalDto)
+        throws RentalNotFoundException {
+        RentalDto updatedRental = rentalService.update(id, rentalDto);
+        return new ResponseEntity<>(updatedRental, HttpStatus.OK);
+    }
+
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('USER') or hasRole('MANAGER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('MANAGER') or hasAuthority('ADMIN')")
     public ResponseEntity<RentalDto> getRentalById(@PathVariable Long id)
         throws RentalNotFoundException {
         RentalDto rental = rentalService.getRentalById(id);
@@ -48,7 +56,7 @@ public class RentalController {
     }
 
     @PostMapping("/start")
-    @PreAuthorize("hasRole('USER') or hasRole('MANAGER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('MANAGER') or hasAuthority('ADMIN')")
     public ResponseEntity<RentalDto> startRental(
         @RequestParam Long subscriptionId,
         @RequestParam Long scooterId
@@ -58,7 +66,7 @@ public class RentalController {
     }
 
     @PutMapping("/{id}/end")
-    @PreAuthorize("hasRole('USER') or hasRole('MANAGER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('MANAGER') or hasAuthority('ADMIN')")
     public ResponseEntity<RentalDto> endRental(@PathVariable Long id)
         throws RentalNotFoundException, ScooterNotFoundException {
         RentalDto endRental = rentalService.endRental(id);
@@ -66,28 +74,28 @@ public class RentalController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('MANAGER') or hasAuthority('ADMIN')")
     public ResponseEntity<List<RentalDto>> getAllRentals() {
         List<RentalDto> rentals = rentalService.getAllRentals();
         return new ResponseEntity<>(rentals, HttpStatus.OK);
     }
 
     @GetMapping("/user/{userId}")
-    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('MANAGER') or hasAuthority('ADMIN')")
     public ResponseEntity<List<RentalDto>> getRentalsByUser(@PathVariable Long userId) {
         List<RentalDto> rentals = rentalService.getRentalsByUser(userId);
         return new ResponseEntity<>(rentals, HttpStatus.OK);
     }
 
     @GetMapping("/scooter/{scooterId}")
-    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('MANAGER') or hasAuthority('ADMIN')")
     public ResponseEntity<List<RentalDto>> getRentalsByScooter(@PathVariable Long scooterId) {
         List<RentalDto> rentals = rentalService.getRentalsByScooter(scooterId);
         return new ResponseEntity<>(rentals, HttpStatus.OK);
     }
 
     @GetMapping("/scooter/{scooterId}/history")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<List<RentalDto>> getRentalHistoryByScooter(
         @PathVariable Long scooterId) {
         List<RentalDto> rentals = rentalService.getRentalHistoryByScooter(scooterId);
