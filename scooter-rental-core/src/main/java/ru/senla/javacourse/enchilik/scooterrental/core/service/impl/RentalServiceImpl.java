@@ -32,7 +32,6 @@ import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.TariffReposito
 import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.UserRepository;
 import ru.senla.javacourse.enchilik.scooterrental.core.service.RentalService;
 import ru.senla.javacourse.enchilik.scooterrental.core.service.ScooterService;
-import ru.senla.javacourse.enchilik.scooterrental.core.service.SecurityService;
 import ru.senla.javacourse.enchilik.scooterrental.core.tariff.TariffStrategy;
 import ru.senla.javacourse.enchilik.scooterrental.core.tariff.TariffStrategyResolver;
 
@@ -45,10 +44,8 @@ public class RentalServiceImpl implements RentalService {
     private final UserRepository userRepository;
     private final ScooterRepository scooterRepository;
     private final ScooterService scooterService;
-    private final TariffRepository tariffRepository;
     private final SubscriptionRepository subscriptionRepository;
     private final TariffStrategyResolver tariffStrategyResolver;
-    private final SecurityService securityService;
 
     @Autowired
     public RentalServiceImpl(
@@ -56,15 +53,15 @@ public class RentalServiceImpl implements RentalService {
         UserRepository userRepository,
         ScooterRepository scooterRepository,
         ScooterService scooterService,
-        TariffRepository tariffRepository, SubscriptionRepository subscriptionRepository, TariffStrategyResolver tariffStrategyResolver, SecurityService securityService) {
+        SubscriptionRepository subscriptionRepository,
+        TariffStrategyResolver tariffStrategyResolver
+    ) {
         this.rentalRepository = rentalRepository;
         this.userRepository = userRepository;
         this.scooterRepository = scooterRepository;
         this.scooterService = scooterService;
-        this.tariffRepository = tariffRepository;
         this.subscriptionRepository = subscriptionRepository;
         this.tariffStrategyResolver = tariffStrategyResolver;
-        this.securityService = securityService;
     }
 
     @Override
@@ -208,14 +205,9 @@ public class RentalServiceImpl implements RentalService {
     }
 
     @Override
-    public RentalDto startRental(Long subscriptionId, Long scooterId)
+    public RentalDto startRental(User user, Long subscriptionId, Long scooterId)
         throws SubscriptionNotFoundException, ScooterNotFoundException {
         logger.info("Попытка начать аренду по подписке ID: {}", subscriptionId);
-
-        User user = securityService.getAuthorizedUser();
-
-
-        // TODO: 14.05.2025 Logger messages
 
         if (user.getRentBlocked()) {
             throw new UserRentalBlockedException("User can't get a rent: '%s'".formatted(user.getUsername()));
@@ -378,28 +370,6 @@ public class RentalServiceImpl implements RentalService {
                 e);
             throw e;
         }
-    }
-
-    // TODO: оставить или удалить метод
-    private BigDecimal calculateCost(Rental rental) {
-        //        Duration duration = Duration.between(rental.getStartTime(), rental.getEndTime());
-        //        double hours = duration.toMinutes() / 60.0;
-        //        BigDecimal cost;
-        //        Tariff tariff = rental.getTariff();
-        //
-        //        if (tariff.getIsSubscription()) {
-        //            cost = tariff.getPrice();
-        //        } else {
-        //            TODO: Доработать метод
-        //            cost = hours * tariff.getPricePerHour();
-        //        }
-        //скидка
-        //            TODO: Доработать метод
-        //        if (tariff.getDiscount() != null && tariff.getDiscount() > 0) {
-        //            cost = cost * (1 - tariff.getDiscount());
-        //        }
-        //        return cost;
-        return BigDecimal.valueOf(10);
     }
 
     private RentalDto convertToRentalDto(Rental rental) {

@@ -6,6 +6,7 @@ import ru.senla.javacourse.enchilik.scooterrental.core.exception.RentalNotFoundE
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.ScooterNotFoundException;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.TariffNotFoundException;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.UserNotFoundException;
+import ru.senla.javacourse.enchilik.scooterrental.core.model.User;
 
 public interface RentalService {
     RentalDto save(RentalDto rentalDto)
@@ -17,7 +18,7 @@ public interface RentalService {
 
     void delete(Long id) throws RentalNotFoundException;
 
-    RentalDto startRental(Long subscriptionId, Long scooterId)
+    RentalDto startRental(User user, Long subscriptionId, Long scooterId)
         throws RentalNotFoundException, ScooterNotFoundException, TariffNotFoundException;
 
     RentalDto endRental(Long id)

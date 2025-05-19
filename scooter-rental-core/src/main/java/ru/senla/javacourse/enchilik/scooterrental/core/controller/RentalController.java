@@ -72,9 +72,10 @@ public class RentalController {
     @PreAuthorize("hasAuthority('USER') or hasAuthority('MANAGER') or hasAuthority('ADMIN')")
     public ResponseEntity<RentalDto> startRental(
         @RequestParam Long subscriptionId,
-        @RequestParam Long scooterId
+        @RequestParam Long scooterId,
+        @AuthenticationPrincipal User user
     ) throws RentalNotFoundException, ScooterNotFoundException {
-        RentalDto rentalDto = rentalService.startRental(subscriptionId, scooterId);
+        RentalDto rentalDto = rentalService.startRental(user, subscriptionId, scooterId);
         return new ResponseEntity<>(rentalDto, HttpStatus.OK);
     }
 
