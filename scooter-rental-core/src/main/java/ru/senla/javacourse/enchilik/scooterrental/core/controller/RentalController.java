@@ -31,12 +31,9 @@ import ru.senla.javacourse.enchilik.scooterrental.core.service.SecurityService;
 public class RentalController {
 
     private final RentalService rentalService;
-    private final UserRepository userRepository;
-
     @Autowired
-    public RentalController(RentalService rentalService, UserRepository userRepository) {
+    public RentalController(RentalService rentalService) {
         this.rentalService = rentalService;
-        this.userRepository = userRepository;
     }
 
     @PostMapping
@@ -104,9 +101,7 @@ public class RentalController {
     }
 
     @GetMapping("/my")
-    public ResponseEntity<List<RentalDto>> getRentalsByUser(@AuthenticationPrincipal String userName) {
-        User user = userRepository.findByUsername(userName);
-        Long userId = user.getId();
+    public ResponseEntity<List<RentalDto>> getRentalsForAuthenticatedUser(@AuthenticationPrincipal Long userId) {
         List<RentalDto> rentals = rentalService.getRentalsByUser(userId);
         return new ResponseEntity<>(rentals, HttpStatus.OK);
     }

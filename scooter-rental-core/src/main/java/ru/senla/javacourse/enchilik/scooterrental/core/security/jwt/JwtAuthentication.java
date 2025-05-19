@@ -9,6 +9,7 @@ import ru.senla.javacourse.enchilik.scooterrental.core.model.Role;
 public class JwtAuthentication implements Authentication {
 
     private boolean authenticated;
+    private long userId;
     private String username;
     private String firstName;
     private Set<Role> roles;
@@ -30,7 +31,7 @@ public class JwtAuthentication implements Authentication {
 
     @Override
     public Object getPrincipal() {
-        return username;
+        return userId;
     }
 
     @Override
@@ -70,5 +71,13 @@ public class JwtAuthentication implements Authentication {
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 }
