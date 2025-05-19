@@ -30,7 +30,7 @@ public class RentalPointController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('MANAGER') or hasAuthority('ADMIN')")
     public ResponseEntity<RentalPointDto> createRentalPoint(
         @Valid @RequestBody RentalPointDto rentalPointDto) throws RentalPointNotFoundException {
         RentalPointDto createdRentalPoint = rentalPointService.save(rentalPointDto);
@@ -45,7 +45,7 @@ public class RentalPointController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('MANAGER') or hasAuthority('ADMIN')")
     public ResponseEntity<RentalPointDto> updateRentalPoint(
         @PathVariable Long id, @Valid @RequestBody RentalPointDto rentalPointDto)
         throws RentalPointNotFoundException {
@@ -55,7 +55,7 @@ public class RentalPointController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('MANAGER') or hasAuthority('ADMIN')")
     public ResponseEntity<Void> deleteRentalPoint(@PathVariable Long id)
         throws RentalPointNotFoundException {
         rentalPointService.delete(id);

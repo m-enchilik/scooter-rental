@@ -26,9 +26,9 @@ CREATE TABLE user_roles
 
 CREATE TABLE rental_points
 (
-    id              BIGSERIAL        PRIMARY KEY,
-    name            VARCHAR(100)     NOT NULL,
-    address         VARCHAR(255)     NOT NULL,
+    id              BIGSERIAL                  PRIMARY KEY,
+    name            VARCHAR(100)               NOT NULL,
+    address         VARCHAR(255)               NOT NULL,
     latitude        DOUBLE PRECISION           NOT NULL,
     longitude       DOUBLE PRECISION           NOT NULL,
     parent_point_id BIGINT REFERENCES rental_points (id)

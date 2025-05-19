@@ -31,10 +31,6 @@ public class ScooterDto {
     @PositiveOrZero(message = "Пробег не может быть отрицательным")
     private Double mileage;
 
-    private Long rentalPointId;
-
-    private String rentalPointName;
-
     public Long getId() {
         return id;
     }
@@ -81,21 +77,5 @@ public class ScooterDto {
 
     public void setMileage(Double mileage) {
         this.mileage = mileage;
-    }
-
-    public Long getRentalPointId() {
-        return rentalPointId;
-    }
-
-    public void setRentalPointId(Long rentalPointId) {
-        this.rentalPointId = rentalPointId;
-    }
-
-    public String getRentalPointName() {
-        return rentalPointName;
-    }
-
-    public void setRentalPointName(String rentalPointName) {
-        this.rentalPointName = rentalPointName;
     }
 }

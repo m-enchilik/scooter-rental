@@ -12,9 +12,7 @@ import ru.senla.javacourse.enchilik.scooterrental.api.enumeration.ScooterStatus;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.RentalPointNotFoundException;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.ScooterNotFoundException;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.TariffNotFoundException;
-import ru.senla.javacourse.enchilik.scooterrental.core.model.RentalPoint;
 import ru.senla.javacourse.enchilik.scooterrental.core.model.Scooter;
-import ru.senla.javacourse.enchilik.scooterrental.core.model.Tariff;
 import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.RentalPointRepository;
 import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.ScooterRepository;
 import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.TariffRepository;
@@ -58,23 +56,6 @@ public class ScooterServiceImpl implements ScooterService {
             scooter.setStatus(scooterDto.getStatus());
             scooter.setChargeLevel(scooterDto.getChargeLevel());
             scooter.setMileage(scooterDto.getMileage());
-
-            if (scooterDto.getRentalPointId() != null) {
-                RentalPoint rentalPoint =
-                    rentalPointRepository
-                        .findById(scooterDto.getRentalPointId())
-                        .orElseThrow(
-                            () -> {
-                                logger.error(
-                                    "Точка проката с ID {} не найдена.",
-                                    scooterDto.getRentalPointId());
-                                return new RentalPointNotFoundException(
-                                    "Точка проката с ID "
-                                        + scooterDto.getRentalPointId()
-                                        + " не найдена");
-                            });
-                scooter.setRentalPoint(rentalPoint);
-            }
 
             scooter = scooterRepository.save(scooter);
             scooterDto.setId(scooter.getId());
@@ -147,23 +128,6 @@ public class ScooterServiceImpl implements ScooterService {
             }
             if (scooterDto.getMileage() != null) {
                 scooter.setMileage(scooterDto.getMileage());
-            }
-
-            if (scooterDto.getRentalPointId() != null) {
-                RentalPoint rentalPoint =
-                    rentalPointRepository
-                        .findById(scooterDto.getRentalPointId())
-                        .orElseThrow(
-                            () -> {
-                                logger.error(
-                                    "Точка проката с ID {} не найдена.",
-                                    scooterDto.getRentalPointId());
-                                return new RentalPointNotFoundException(
-                                    "Точка проката с ID "
-                                        + scooterDto.getRentalPointId()
-                                        + " не найдена");
-                            });
-                scooter.setRentalPoint(rentalPoint);
             }
 
             scooter = scooterRepository.save(scooter);
@@ -281,10 +245,6 @@ public class ScooterServiceImpl implements ScooterService {
         dto.setStatus(scooter.getStatus());
         dto.setChargeLevel(scooter.getChargeLevel());
         dto.setMileage(scooter.getMileage());
-        if (scooter.getRentalPoint() != null) {
-            dto.setRentalPointId(scooter.getRentalPoint().getId());
-            dto.setRentalPointName(scooter.getRentalPoint().getName());
-        }
         return dto;
     }
 }
