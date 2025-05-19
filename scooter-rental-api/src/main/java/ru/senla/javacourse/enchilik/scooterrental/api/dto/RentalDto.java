@@ -8,17 +8,17 @@ import java.time.LocalDateTime;
 public class RentalDto {
     private Long id;
 
-    @NotNull(message = "ID пользователя не может быть null")
+//    @NotNull(message = "ID пользователя не может быть null")
     private Long userId;
 
     private String username;
 
-    @NotNull(message = "ID самоката не может быть null")
+//    @NotNull(message = "ID самоката не может быть null")
     private Long scooterId;
 
     private String scooterModel;
 
-    @NotNull(message = "Время начала аренды не может быть null")
+//    @NotNull(message = "Время начала аренды не может быть null")
     private LocalDateTime startTime;
 
     private LocalDateTime endTime;

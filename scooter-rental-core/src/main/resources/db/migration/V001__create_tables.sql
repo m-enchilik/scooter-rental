@@ -41,8 +41,8 @@ CREATE TABLE tariffs
     name                    VARCHAR(50) NOT NULL,
     description             VARCHAR(255),
     price                   DECIMAL,
-    units_included          INTEGER,
-    validity_period_hours   INTEGER,
+    units_included          BIGINT,
+    validity_period_hours   BIGINT,
     is_subscription         BOOLEAN     NOT NULL
 );
 
@@ -64,7 +64,7 @@ CREATE TABLE subscriptions
     user_id             BIGINT REFERENCES users (id)    NOT NULL,
     tariff_id           BIGINT REFERENCES tariffs (id)  NOT NULL,
     expiration_time     TIMESTAMP,
-    rest_units          INTEGER
+    rest_units          BIGINT
 );
 
 CREATE TABLE rentals

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,19 +17,23 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.senla.javacourse.enchilik.scooterrental.api.dto.RentalDto;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.RentalNotFoundException;
+import ru.senla.javacourse.enchilik.scooterrental.core.exception.RentalPointNotFoundException;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.ScooterNotFoundException;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.UserNotFoundException;
 import ru.senla.javacourse.enchilik.scooterrental.core.service.RentalService;
+import ru.senla.javacourse.enchilik.scooterrental.core.service.SecurityService;
 
 @RestController
 @RequestMapping("/api/rentals")
 public class RentalController {
 
     private final RentalService rentalService;
+    private final SecurityService securityService;
 
     @Autowired
-    public RentalController(RentalService rentalService) {
+    public RentalController(RentalService rentalService, SecurityService securityService) {
         this.rentalService = rentalService;
+        this.securityService = securityService;
     }
 
     @PostMapping
@@ -39,7 +44,7 @@ public class RentalController {
         return new ResponseEntity<>(createdRental, HttpStatus.CREATED);
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<RentalDto> updateRental(@PathVariable Long id, @Valid @RequestBody RentalDto rentalDto)
         throws RentalNotFoundException {
@@ -53,6 +58,14 @@ public class RentalController {
         throws RentalNotFoundException {
         RentalDto rental = rentalService.getRentalById(id);
         return new ResponseEntity<>(rental, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<Void> deleteRental(@PathVariable Long id)
+        throws RentalNotFoundException {
+        rentalService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PostMapping("/start")
@@ -83,6 +96,13 @@ public class RentalController {
     @GetMapping("/user/{userId}")
     @PreAuthorize("hasAuthority('MANAGER') or hasAuthority('ADMIN')")
     public ResponseEntity<List<RentalDto>> getRentalsByUser(@PathVariable Long userId) {
+        List<RentalDto> rentals = rentalService.getRentalsByUser(userId);
+        return new ResponseEntity<>(rentals, HttpStatus.OK);
+    }
+
+    @GetMapping("/my")
+    public ResponseEntity<List<RentalDto>> getRentalsByUser() {
+        Long userId = securityService.getAuthorizedUser().getId();
         List<RentalDto> rentals = rentalService.getRentalsByUser(userId);
         return new ResponseEntity<>(rentals, HttpStatus.OK);
     }

@@ -45,7 +45,7 @@ public class Rental {
     @Column(name = "total_cost")
     private BigDecimal totalCost;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subscription_id")
     private Subscription subscription;
 

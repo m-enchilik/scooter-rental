@@ -15,6 +15,8 @@ public interface RentalService {
 
     RentalDto getRentalById(Long id) throws RentalNotFoundException;
 
+    void delete(Long id) throws RentalNotFoundException;
+
     RentalDto startRental(Long subscriptionId, Long scooterId)
         throws RentalNotFoundException, ScooterNotFoundException, TariffNotFoundException;
 

@@ -32,6 +32,7 @@ import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.TariffReposito
 import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.UserRepository;
 import ru.senla.javacourse.enchilik.scooterrental.core.service.RentalService;
 import ru.senla.javacourse.enchilik.scooterrental.core.service.ScooterService;
+import ru.senla.javacourse.enchilik.scooterrental.core.service.SecurityService;
 import ru.senla.javacourse.enchilik.scooterrental.core.tariff.TariffStrategy;
 import ru.senla.javacourse.enchilik.scooterrental.core.tariff.TariffStrategyResolver;
 
@@ -47,6 +48,7 @@ public class RentalServiceImpl implements RentalService {
     private final TariffRepository tariffRepository;
     private final SubscriptionRepository subscriptionRepository;
     private final TariffStrategyResolver tariffStrategyResolver;
+    private final SecurityService securityService;
 
     @Autowired
     public RentalServiceImpl(
@@ -54,7 +56,7 @@ public class RentalServiceImpl implements RentalService {
         UserRepository userRepository,
         ScooterRepository scooterRepository,
         ScooterService scooterService,
-        TariffRepository tariffRepository, SubscriptionRepository subscriptionRepository, TariffStrategyResolver tariffStrategyResolver) {
+        TariffRepository tariffRepository, SubscriptionRepository subscriptionRepository, TariffStrategyResolver tariffStrategyResolver, SecurityService securityService) {
         this.rentalRepository = rentalRepository;
         this.userRepository = userRepository;
         this.scooterRepository = scooterRepository;
@@ -62,6 +64,7 @@ public class RentalServiceImpl implements RentalService {
         this.tariffRepository = tariffRepository;
         this.subscriptionRepository = subscriptionRepository;
         this.tariffStrategyResolver = tariffStrategyResolver;
+        this.securityService = securityService;
     }
 
     @Override
@@ -116,10 +119,6 @@ public class RentalServiceImpl implements RentalService {
             rental.setEndMileage(rentalDto.getEndMileage());
             rental.setSubscription(subscription);
             rental.setTotalCost(rentalDto.getTotalCost());
-
-            if (rentalDto.getEndTime() != null) {
-                scooterService.updateScooterStatus(scooter.getId(), ScooterStatus.IN_USE);
-            }
 
             rental = rentalRepository.save(rental);
             rentalDto.setId(rental.getId());
@@ -191,11 +190,29 @@ public class RentalServiceImpl implements RentalService {
     }
 
     @Override
+    public void delete(Long id) throws RentalNotFoundException {
+        logger.info("Попытка удалить аренду с ID: {}", id);
+        try {
+            Rental rental = rentalRepository.findById(id).orElseThrow(
+                () -> {
+                    logger.warn("Аренда с ID {} не найдена.", id);
+                    return new RentalNotFoundException("Аренда с ID " + id + " не найдена.");
+                }
+            );
+            rentalRepository.delete(id);
+            logger.info("Аренда с ID {} успешно удалена.", id);
+        } catch (Exception e) {
+            logger.error("Ошибка при удалении записи аренды с ID {}: {}", id, e.getMessage(), e);
+            throw e;
+        }
+    }
+
+    @Override
     public RentalDto startRental(Long subscriptionId, Long scooterId)
         throws SubscriptionNotFoundException, ScooterNotFoundException {
         logger.info("Попытка начать аренду по подписке ID: {}", subscriptionId);
 
-        User user = getAuthorizedUser();
+        User user = securityService.getAuthorizedUser();
 
 
         // TODO: 14.05.2025 Logger messages
@@ -361,12 +378,6 @@ public class RentalServiceImpl implements RentalService {
                 e);
             throw e;
         }
-    }
-
-    private User getAuthorizedUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName());
-        return user;
     }
 
     // TODO: оставить или удалить метод
