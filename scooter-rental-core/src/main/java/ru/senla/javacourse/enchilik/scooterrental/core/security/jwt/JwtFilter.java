@@ -7,6 +7,7 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -18,9 +19,12 @@ public class JwtFilter extends GenericFilterBean {
     private static final String AUTHORIZATION = "Authorization";
 
     private final JwtProvider jwtProvider;
+    private final JwtUtils jwtUtils;
 
-    public JwtFilter(JwtProvider jwtProvider) {
+    @Autowired
+    public JwtFilter(JwtProvider jwtProvider, JwtUtils jwtUtils) {
         this.jwtProvider = jwtProvider;
+        this.jwtUtils = jwtUtils;
     }
 
     @Override
@@ -29,7 +33,7 @@ public class JwtFilter extends GenericFilterBean {
         final String token = getTokenFromRequest((HttpServletRequest) request);
         if (token != null && jwtProvider.validateAccessToken(token)) {
             final Claims claims = jwtProvider.getAccessClaims(token);
-            final JwtAuthentication jwtInfoToken = JwtUtils.generate(claims);
+            final JwtAuthentication jwtInfoToken = jwtUtils.generate(claims);
             jwtInfoToken.setAuthenticated(true);
             SecurityContextHolder.getContext().setAuthentication(jwtInfoToken);
         }

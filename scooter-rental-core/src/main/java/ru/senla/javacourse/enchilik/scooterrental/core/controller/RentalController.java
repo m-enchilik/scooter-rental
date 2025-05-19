@@ -101,8 +101,8 @@ public class RentalController {
     }
 
     @GetMapping("/my")
-    public ResponseEntity<List<RentalDto>> getRentalsForAuthenticatedUser(@AuthenticationPrincipal Long userId) {
-        List<RentalDto> rentals = rentalService.getRentalsByUser(userId);
+    public ResponseEntity<List<RentalDto>> getRentalsForAuthenticatedUser(@AuthenticationPrincipal User user) {
+        List<RentalDto> rentals = rentalService.getRentalsByUser(user.getId());
         return new ResponseEntity<>(rentals, HttpStatus.OK);
     }
 

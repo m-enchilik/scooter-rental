@@ -5,11 +5,12 @@ import java.util.Set;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import ru.senla.javacourse.enchilik.scooterrental.core.model.Role;
+import ru.senla.javacourse.enchilik.scooterrental.core.model.User;
 
 public class JwtAuthentication implements Authentication {
 
     private boolean authenticated;
-    private long userId;
+    private User principal;
     private String username;
     private String firstName;
     private Set<Role> roles;
@@ -30,8 +31,8 @@ public class JwtAuthentication implements Authentication {
     }
 
     @Override
-    public Object getPrincipal() {
-        return userId;
+    public User getPrincipal() {
+        return principal;
     }
 
     @Override
@@ -73,11 +74,7 @@ public class JwtAuthentication implements Authentication {
         this.firstName = firstName;
     }
 
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setPrincipal(User principal) {
+        this.principal = principal;
     }
 }
