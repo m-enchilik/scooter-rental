@@ -3,12 +3,12 @@ VALUES (-1, 'ROLE_USER'),
        (-2, 'ROLE_MANAGER'),
        (-3, 'ROLE_ADMIN');
 
-INSERT INTO users (id, username, password, first_name, last_name, email, phone_number)
-VALUES (-1, 'admin', '$2a$12$/9LH.RZqfutLDiThniVCa.tPCsrEg8P8XWEZSYStFy.0NoGTeuQCm', 'Admin', 'Adminov', 'admin@mail.ru', '+375293040036'),
-       (-2, 'user2', '$2a$12$/9LH.RZqfutLDiThniVCa.tPCsrEg8P8XWEZSYStFy.0NoGTeuQCm', 'User', 'Two', 'user2@mail.ru', '+375291111111'),
-       (-3, 'user3', '$2a$12$/9LH.RZqfutLDiThniVCa.tPCsrEg8P8XWEZSYStFy.0NoGTeuQCm', 'User', 'Three', 'user3@mail.ru', '+375292222222'),
-       (-4, 'user4', '$2a$12$/9LH.RZqfutLDiThniVCa.tPCsrEg8P8XWEZSYStFy.0NoGTeuQCm', 'User', 'Four', 'user4@mail.ru', '+375293333333'),
-       (-5, 'user5', '$2a$12$/9LH.RZqfutLDiThniVCa.tPCsrEg8P8XWEZSYStFy.0NoGTeuQCm', 'User', 'Five', 'user5@mail.ru', '+375294444444');
+INSERT INTO users (id, username, password, first_name, last_name, email, phone_number, deposit, user_blocked, rent_blocked)
+VALUES (-1, 'admin', '$2a$12$/9LH.RZqfutLDiThniVCa.tPCsrEg8P8XWEZSYStFy.0NoGTeuQCm', 'Admin', 'Adminov', 'admin@mail.ru', '0123456789', 0, false, false),
+       (-2, 'user2', '$2a$12$/9LH.RZqfutLDiThniVCa.tPCsrEg8P8XWEZSYStFy.0NoGTeuQCm', 'User', 'Two', 'user2@mail.ru', '1234567890', 0, false, false),
+       (-3, 'user3', '$2a$12$/9LH.RZqfutLDiThniVCa.tPCsrEg8P8XWEZSYStFy.0NoGTeuQCm', 'User', 'Three', 'user3@mail.ru', '2345678901', 0, false, false),
+       (-4, 'user4', '$2a$12$/9LH.RZqfutLDiThniVCa.tPCsrEg8P8XWEZSYStFy.0NoGTeuQCm', 'User', 'Four', 'user4@mail.ru', '3456789012', 0, false, false),
+       (-5, 'user5', '$2a$12$/9LH.RZqfutLDiThniVCa.tPCsrEg8P8XWEZSYStFy.0NoGTeuQCm', 'User', 'Five', 'user5@mail.ru', '0987654321', 0, false, false);
 
 INSERT INTO user_roles (user_id, role)
 VALUES (-1, 'ADMIN'),
