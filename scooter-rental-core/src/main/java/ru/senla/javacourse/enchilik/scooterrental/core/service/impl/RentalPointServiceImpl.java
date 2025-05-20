@@ -172,9 +172,11 @@ public class RentalPointServiceImpl implements RentalPointService {
     public List<RentalPointDto> findAll() {
         logger.info("Попытка получить все точки проката.");
         try {
+            List<RentalPoint> rootRentalPoints = rentalPointRepository.findRentalPointsTree();
+
             List<RentalPointDto> rentalPointDtos =
-                rentalPointRepository.findAll().stream()
-                    .map(this::convertToRentalPointDto)
+                rootRentalPoints.stream()
+                    .map(this::convertToRentalPointDtoRecursively)
                     .collect(Collectors.toList());
             logger.info("Получено {} точек проката.", rentalPointDtos.size());
             return rentalPointDtos;
@@ -244,26 +246,29 @@ public class RentalPointServiceImpl implements RentalPointService {
             dto.setParentPointId(rentalPoint.getParentPoint().getId());
         }
 
-        // добавление точек рекурсия
+        //        try {
+        //            List<ScooterDto> scooterDtos =
+        //                scooterService.getScootersByRentalPoint(rentalPoint.getId());
+        //            dto.setScooters(scooterDtos);
+        //        } catch (RentalPointNotFoundException e) {
+        //            logger.error(
+        //                "Точка проката с ID {} не найдена при получении самокатов: {}",
+        //                rentalPoint.getId(),
+        //                e.getMessage());
+        //            dto.setScooters(java.util.Collections.emptyList());
+        //        }
+
+        return dto;
+    }
+
+    private RentalPointDto convertToRentalPointDtoRecursively(RentalPoint rentalPoint) {
+        RentalPointDto dto = convertToRentalPointDto(rentalPoint);
         if (rentalPoint.getChildPoints() != null) {
             dto.setChildPoints(
                 rentalPoint.getChildPoints().stream()
-                    .map(this::convertToRentalPointDto)
-                    .collect(Collectors.toList()));
+                    .map(this::convertToRentalPointDtoRecursively)
+                    .toList());
         }
-
-        try {
-            List<ScooterDto> scooterDtos =
-                scooterService.getScootersByRentalPoint(rentalPoint.getId());
-            dto.setScooters(scooterDtos);
-        } catch (RentalPointNotFoundException e) {
-            logger.error(
-                "Точка проката с ID {} не найдена при получении самокатов: {}",
-                rentalPoint.getId(),
-                e.getMessage());
-            dto.setScooters(java.util.Collections.emptyList());
-        }
-
         return dto;
     }
 }

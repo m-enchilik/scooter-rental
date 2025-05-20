@@ -35,6 +35,27 @@ public class RentalPointRepository extends AbstractDao<RentalPoint, Long> {
         }
     }
 
+    public List<RentalPoint> findRentalPointsTree() {
+        String hql = "SELECT rp FROM RentalPoint rp WHERE rp.parentPoint IS NULL";
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            Query<RentalPoint> query = session.createQuery(hql, RentalPoint.class);
+            List<RentalPoint> list = query.list();
+            list.stream()
+                    .map(RentalPoint::getChildPoints)
+                    .forEach(this::fillLazyFieldsRecursively);
+            transaction.commit();
+            return list;
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            logger.error("Can't find root rental-points", e);
+            throw new DaoException(e);
+        }
+    }
+
     public List<RentalPoint> findByParentPointId(Long parentId) {
         String hql = "SELECT rp FROM RentalPoint rp WHERE rp.parentPoint.id = :parentId";
         Transaction transaction = null;
@@ -43,6 +64,7 @@ public class RentalPointRepository extends AbstractDao<RentalPoint, Long> {
             Query<RentalPoint> query = session.createQuery(hql, RentalPoint.class);
             query.setParameter("parentId", parentId);
             List<RentalPoint> list = query.list();
+            list.forEach(this::fillLazyFields);
             transaction.commit();
             return list;
         } catch (Exception e) {
@@ -57,5 +79,12 @@ public class RentalPointRepository extends AbstractDao<RentalPoint, Long> {
     @Override
     protected void fillLazyFields(RentalPoint entity) {
         Hibernate.initialize(entity.getChildPoints());
+    }
+
+    protected void fillLazyFieldsRecursively(List<RentalPoint> list) {
+        for (RentalPoint rentalPoint : list) {
+            fillLazyFields(rentalPoint);
+            fillLazyFieldsRecursively(rentalPoint.getChildPoints());
+        }
     }
 }
