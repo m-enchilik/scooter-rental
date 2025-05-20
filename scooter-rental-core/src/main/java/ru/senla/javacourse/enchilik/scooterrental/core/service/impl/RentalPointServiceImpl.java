@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.senla.javacourse.enchilik.scooterrental.api.dto.RentalPointDto;
-import ru.senla.javacourse.enchilik.scooterrental.api.dto.ScooterDto;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.RentalPointNotFoundException;
 import ru.senla.javacourse.enchilik.scooterrental.core.model.RentalPoint;
 import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.RentalPointRepository;
@@ -172,7 +171,7 @@ public class RentalPointServiceImpl implements RentalPointService {
     public List<RentalPointDto> findAll() {
         logger.info("Попытка получить все точки проката.");
         try {
-            List<RentalPoint> rootRentalPoints = rentalPointRepository.findRentalPointsTree();
+            List<RentalPoint> rootRentalPoints = rentalPointRepository.findAll();
 
             List<RentalPointDto> rentalPointDtos =
                 rootRentalPoints.stream()

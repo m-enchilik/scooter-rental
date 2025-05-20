@@ -34,8 +34,8 @@ public class RentalPointRepository extends AbstractDao<RentalPoint, Long> {
             throw new DaoException(e);
         }
     }
-
-    public List<RentalPoint> findRentalPointsTree() {
+    @Override
+    public List<RentalPoint> findAll() {
         String hql = "SELECT rp FROM RentalPoint rp WHERE rp.parentPoint IS NULL";
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
