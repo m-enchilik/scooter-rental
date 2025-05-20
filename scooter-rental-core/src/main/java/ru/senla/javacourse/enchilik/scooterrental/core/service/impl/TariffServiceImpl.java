@@ -1,16 +1,24 @@
 package ru.senla.javacourse.enchilik.scooterrental.core.service.impl;
 
 import jakarta.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.senla.javacourse.enchilik.scooterrental.api.dto.SubscriptionDto;
 import ru.senla.javacourse.enchilik.scooterrental.api.dto.TariffDto;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.TariffNotFoundException;
+import ru.senla.javacourse.enchilik.scooterrental.core.exception.UserHasNotEnoughMoneyException;
+import ru.senla.javacourse.enchilik.scooterrental.core.model.Subscription;
 import ru.senla.javacourse.enchilik.scooterrental.core.model.Tariff;
+import ru.senla.javacourse.enchilik.scooterrental.core.model.User;
+import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.SubscriptionRepository;
 import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.TariffRepository;
+import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.UserRepository;
+import ru.senla.javacourse.enchilik.scooterrental.core.service.SubscriptionService;
 import ru.senla.javacourse.enchilik.scooterrental.core.service.TariffService;
 
 @Service
@@ -20,9 +28,14 @@ public class TariffServiceImpl implements TariffService {
 
     private final TariffRepository tariffRepository;
 
+    private final SubscriptionService subscriptionService;
+    private final UserRepository userRepository;
+
     @Autowired
-    public TariffServiceImpl(TariffRepository tariffRepository) {
+    public TariffServiceImpl(TariffRepository tariffRepository, SubscriptionService subscriptionService, UserRepository userRepository) {
         this.tariffRepository = tariffRepository;
+        this.subscriptionService = subscriptionService;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -151,6 +164,38 @@ public class TariffServiceImpl implements TariffService {
             logger.error("Ошибка при получении всех тарифов: {}", e.getMessage(), e);
             throw e;
         }
+    }
+
+    @Override
+    public SubscriptionDto buyTariff(User user, Long id) {
+
+        Tariff tariff =
+            tariffRepository
+                .findById(id)
+                .orElseThrow(
+                    () -> {
+                        logger.warn("Тариф с ID {} не найден.", id);
+                        return new TariffNotFoundException(
+                            "Тариф с ID " + id + " не найден");
+                    });
+
+        if (user.getDeposit().compareTo(tariff.getPrice()) < 0)  {
+            throw new UserHasNotEnoughMoneyException("Не достаточно денег для покупки тарифа");
+        }
+        user.setDeposit(user.getDeposit().subtract(tariff.getPrice()));
+        userRepository.save(user);
+
+        Subscription subscription = new Subscription();
+        subscription.setTariff(tariff);
+        subscription.setUser(user);
+        subscription.setRestUnits(tariff.getUnitsIncluded());
+        Integer validityPeriodHours = tariff.getValidityPeriodHours();
+        if (validityPeriodHours != null) {
+            subscription.setExpirationTime(LocalDateTime.now().plusHours(validityPeriodHours));
+        }
+        // TODO: в идеале реализовать через стратегию
+        SubscriptionDto dto = subscriptionService.save(subscription);
+        return dto;
     }
 
     private TariffDto convertToTariffDto(Tariff tariff) {

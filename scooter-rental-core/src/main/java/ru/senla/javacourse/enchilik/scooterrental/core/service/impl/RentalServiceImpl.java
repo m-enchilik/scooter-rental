@@ -222,6 +222,12 @@ public class RentalServiceImpl implements RentalService {
             throw new SubscriptionWrongUserException("Wrong subscription: different user");
         }
 
+        if (!subscription.isActive()) {
+            throw new SubscriptionNotFoundException(
+                "Subscription with id: %s is not more active.'".formatted(subscriptionId)
+            );
+        }
+
         Scooter scooter = scooterRepository
             .findById(scooterId)
             .orElseThrow(() ->
@@ -275,7 +281,7 @@ public class RentalServiceImpl implements RentalService {
             Scooter scooter = rental.getScooter();
             rental.setEndMileage(scooter.getMileage());
 
-            long minutesUsed = ChronoUnit.MINUTES.between(rental.getStartTime(), rental.getEndTime());
+            long minutesUsed = ChronoUnit.MINUTES.between(rental.getStartTime(), rental.getEndTime()) + 1; // Это округление в большую сторону
 
             tariffStrategy.finish(rental, minutesUsed);
             rental = rentalRepository.save(rental);

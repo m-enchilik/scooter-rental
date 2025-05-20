@@ -34,15 +34,7 @@ public class Subscription {
     private Long restUnits;
 
     @Column(name = "active")
-    private boolean isActive;
-
-//    public boolean isActive() {
-//        if (expirationTime.isBefore(LocalDateTime.now())) {
-//            return  false;
-//        }
-//        return (restUnits != null && restUnits > 0)
-//            || (tariff != null && tariff.getType() == TariffType.BASIC);
-//    }
+    private boolean isActive = true;
 
     public Long getId() {
         return id;

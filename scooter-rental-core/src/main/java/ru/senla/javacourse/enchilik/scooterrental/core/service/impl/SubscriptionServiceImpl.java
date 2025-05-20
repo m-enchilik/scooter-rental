@@ -79,6 +79,19 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
+    public SubscriptionDto save(Subscription subscription) {
+        try {
+            Subscription saved = subscriptionRepository.save(subscription);
+
+            logger.info("Подписка успешно создана с ID: {}", subscription.getId());
+            return convertToSubscriptionDto(saved);
+        } catch (Exception e) {
+            logger.error("Ошибка при создании подписки: {}", e.getMessage(), e);
+            throw e;
+        }
+    }
+
+    @Override
     public SubscriptionDto findById(Long id) throws SubscriptionNotFoundException {
         logger.info("Попытка получить подписку с ID: {}", id);
         try {
@@ -206,4 +219,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         subscriptionDto.setExpirationTime(saved.getExpirationTime());
         return subscriptionDto;
     }
+
+
 }

@@ -66,11 +66,11 @@ public class UserServiceImpl implements UserService {
         user.setRentBlocked(false);
         user.setDeposit(BigDecimal.ZERO);
         user.setRoles(roles);
-        User saved = userRepository.save(user);
+        user = userRepository.save(user);
 
         subscriptionService.addBasicTariff(user);
 
-        UserDto userDto = convertToUserDto(saved);
+        UserDto userDto = convertToUserDto(user);
         return userDto;
     }
 

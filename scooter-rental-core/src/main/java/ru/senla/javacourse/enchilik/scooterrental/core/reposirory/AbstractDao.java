@@ -39,7 +39,6 @@ public abstract class AbstractDao<T, K extends Serializable> implements Dao<T, K
         }
     }
 
-    //    TODO: можно ли заменить на @Transactional
     @Override
     public Optional<T> findById(K entityK) {
         Transaction transaction = null;

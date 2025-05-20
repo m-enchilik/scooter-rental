@@ -11,7 +11,7 @@ public class SubscriptionDto {
 
     @NotNull(message = "ID тарифа не может быть null")
     private Long tariffId;
-
+    // TODO: Наименование и описание тарифа
     private LocalDateTime expirationTime;
 
     private Long restUnits;

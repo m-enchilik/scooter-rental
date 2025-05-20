@@ -3,6 +3,7 @@ package ru.senla.javacourse.enchilik.scooterrental.core.reposirory;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -42,7 +43,7 @@ public class SubscriptionRepository extends AbstractDao<Subscription, Long> {
         String hql = """
             SELECT s
             FROM Subscription s
-            WHERE s.active = TRUE
+            WHERE s.isActive = TRUE
                 AND s.user.id = :userId
                 AND (s.expirationTime is null OR s.expirationTime > :threshold)
         """;
@@ -62,5 +63,10 @@ public class SubscriptionRepository extends AbstractDao<Subscription, Long> {
             logger.error("Can't find subscriptions by user id: '{}'", userId, e);
             throw new DaoException(e);
         }
+    }
+
+    @Override
+    protected void fillLazyFields(Subscription entity) {
+        Hibernate.initialize(entity.getTariff());
     }
 }

@@ -35,7 +35,7 @@ public class Tariff {
     private BigDecimal price;
 
     @Column(name = "units_included")
-    private Integer unitsIncluded;
+    private Long unitsIncluded;
 
     @Column(name = "validity_period_hours")
     private Integer validityPeriodHours;
@@ -80,11 +80,11 @@ public class Tariff {
         this.price = price;
     }
 
-    public Integer getUnitsIncluded() {
+    public Long getUnitsIncluded() {
         return unitsIncluded;
     }
 
-    public void setUnitsIncluded(Integer unitsIncluded) {
+    public void setUnitsIncluded(Long unitsIncluded) {
         this.unitsIncluded = unitsIncluded;
     }
 

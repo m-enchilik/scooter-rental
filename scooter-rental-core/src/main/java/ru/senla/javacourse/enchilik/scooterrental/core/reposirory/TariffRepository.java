@@ -29,7 +29,7 @@ public class TariffRepository extends AbstractDao<Tariff, Long> {
                 transaction.rollback();
             }
             logger.error("Can't find the only one active BASIC tariff", e);
-            throw new TariffNotFoundException("Can't find the only one active BASIC tariff");
+            throw new TariffNotFoundException("Can't find the only one active BASIC tariff", e);
         }
 
     }

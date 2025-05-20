@@ -21,7 +21,7 @@ public class TariffDto {
     @PositiveOrZero(message = "Цена абонемента не может быть отрицательной")
     private BigDecimal subscriptionPrice;
 
-    private Integer unitsIncluded;
+    private Long unitsIncluded;
 
     private Integer validityPeriodHours;
 
@@ -68,11 +68,11 @@ public class TariffDto {
         this.subscriptionPrice = subscriptionPrice;
     }
 
-    public Integer getUnitsIncluded() {
+    public Long getUnitsIncluded() {
         return unitsIncluded;
     }
 
-    public void setUnitsIncluded(Integer unitsIncluded) {
+    public void setUnitsIncluded(Long unitsIncluded) {
         this.unitsIncluded = unitsIncluded;
     }
 
