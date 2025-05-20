@@ -42,8 +42,7 @@ CREATE TABLE tariffs
     description             VARCHAR(255),
     price                   DECIMAL,
     units_included          BIGINT,
-    validity_period_hours   BIGINT,
-    is_subscription         BOOLEAN     NOT NULL
+    validity_period_hours   BIGINT
 );
 
 CREATE TABLE scooters
@@ -63,7 +62,8 @@ CREATE TABLE subscriptions
     user_id             BIGINT REFERENCES users (id)    NOT NULL,
     tariff_id           BIGINT REFERENCES tariffs (id)  NOT NULL,
     expiration_time     TIMESTAMP,
-    rest_units          BIGINT
+    rest_units          BIGINT,
+    active              BOOLEAN                         NOT NULL DEFAULT TRUE
 );
 
 CREATE TABLE rentals

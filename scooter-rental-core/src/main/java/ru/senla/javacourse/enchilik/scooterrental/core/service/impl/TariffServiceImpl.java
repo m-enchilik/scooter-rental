@@ -37,8 +37,6 @@ public class TariffServiceImpl implements TariffService {
             tariff.setPrice(tariffDto.getSubscriptionPrice());
             tariff.setUnitsIncluded(tariffDto.getUnitsIncluded());
             tariff.setValidityPeriodHours(tariffDto.getValidityPeriodHours());
-            tariff.setIsSubscription(tariffDto.getIsSubscription());
-
 
             tariff = tariffRepository.save(tariff);
             tariffDto.setId(tariff.getId());
@@ -105,9 +103,6 @@ public class TariffServiceImpl implements TariffService {
             //            if (tariffDto.getDiscount() != null) {
             //                tariff.setDiscount(tariffDto.getDiscount());
             //            }
-            if (tariffDto.getIsSubscription() != null) {
-                tariff.setIsSubscription(tariffDto.getIsSubscription());
-            }
 
             tariffRepository.save(tariff);
             TariffDto updatedTariffDto = convertToTariffDto(tariff);
@@ -167,7 +162,6 @@ public class TariffServiceImpl implements TariffService {
         dto.setSubscriptionPrice(tariff.getPrice());
         dto.setUnitsIncluded(tariff.getUnitsIncluded());
         dto.setValidityPeriodHours(tariff.getValidityPeriodHours());
-        dto.setIsSubscription(tariff.getIsSubscription());
         return dto;
     }
 }

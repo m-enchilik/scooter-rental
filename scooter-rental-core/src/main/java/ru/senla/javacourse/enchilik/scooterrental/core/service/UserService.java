@@ -10,7 +10,7 @@ import ru.senla.javacourse.enchilik.scooterrental.core.model.User;
 public interface UserService {
     UserDto createUser(String userName, String password, String firstName, String lastName, String email, String phoneNumber);
 
-    UserDto save(UserDto userDto) throws UserAlreadyExistsException;
+    UserDto create(UserDto userDto) throws UserAlreadyExistsException;
 
     UserDto getUserById(Long id) throws UserNotFoundException;
     UserDto updateUser(Long id, UserDto userDto) throws UserNotFoundException;

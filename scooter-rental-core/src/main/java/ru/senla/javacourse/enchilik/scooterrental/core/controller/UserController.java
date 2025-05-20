@@ -60,7 +60,7 @@ public class UserController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<UserDto> registerByAdmin(@Valid @RequestBody UserDto userDto)
         throws UserAlreadyExistsException {
-        UserDto createdUser = userService.save(userDto);
+        UserDto createdUser = userService.create(userDto);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 

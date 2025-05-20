@@ -172,6 +172,31 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         }
     }
 
+    @Override
+    public List<SubscriptionDto> findActiveByUserId(Long id) {
+        logger.info("Попытка получить подписки пользователя с ID: {}", id);
+        try {
+            List<SubscriptionDto> dtos =
+                subscriptionRepository.findActiveByUserId(id).stream()
+                    .map(this::convertToSubscriptionDto)
+                    .collect(Collectors.toList());
+            logger.info("Получено {} подписок.", dtos.size());
+            return dtos;
+        } catch (Exception e) {
+            logger.error("Ошибка при получении подписок пользователя с ID: {}", e.getMessage(), e);
+            throw e;
+        }
+    }
+
+    @Override
+    public void addBasicTariff(User user) {
+        Subscription subscription = new Subscription();
+        subscription.setUser(user);
+        Tariff basicTariff = tariffRepository.findBasic();
+        subscription.setTariff(basicTariff);
+        subscriptionRepository.save(subscription);
+    }
+
     private SubscriptionDto convertToSubscriptionDto(Subscription saved) {
         SubscriptionDto subscriptionDto = new SubscriptionDto();
         subscriptionDto.setId(saved.getId());

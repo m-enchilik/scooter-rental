@@ -1,5 +1,7 @@
 package ru.senla.javacourse.enchilik.scooterrental.core.reposirory;
 
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -36,4 +38,29 @@ public class SubscriptionRepository extends AbstractDao<Subscription, Long> {
     }
 
 
+    public List<Subscription> findActiveByUserId(Long userId) {
+        String hql = """
+            SELECT s
+            FROM Subscription s
+            WHERE s.active = TRUE
+                AND s.user.id = :userId
+                AND (s.expirationTime is null OR s.expirationTime > :threshold)
+        """;
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            Query<Subscription> query = session.createQuery(hql, Subscription.class);
+            query.setParameter("userId", userId);
+            query.setParameter("threshold", LocalDateTime.now());
+            List<Subscription> list = query.list();
+            transaction.commit();
+            return list;
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            logger.error("Can't find subscriptions by user id: '{}'", userId, e);
+            throw new DaoException(e);
+        }
+    }
 }

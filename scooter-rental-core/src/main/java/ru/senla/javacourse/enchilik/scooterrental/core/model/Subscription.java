@@ -10,6 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import ru.senla.javacourse.enchilik.scooterrental.api.enumeration.TariffType;
 
 @Entity
 @Table(name = "subscriptions")
@@ -31,6 +32,17 @@ public class Subscription {
 
     @Column(name = "rest_units")
     private Long restUnits;
+
+    @Column(name = "active")
+    private boolean isActive;
+
+//    public boolean isActive() {
+//        if (expirationTime.isBefore(LocalDateTime.now())) {
+//            return  false;
+//        }
+//        return (restUnits != null && restUnits > 0)
+//            || (tariff != null && tariff.getType() == TariffType.BASIC);
+//    }
 
     public Long getId() {
         return id;
@@ -70,5 +82,13 @@ public class Subscription {
 
     public void setRestUnits(Long restUnits) {
         this.restUnits = restUnits;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 }

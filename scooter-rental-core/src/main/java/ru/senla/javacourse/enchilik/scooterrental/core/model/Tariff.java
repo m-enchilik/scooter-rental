@@ -40,9 +40,6 @@ public class Tariff {
     @Column(name = "validity_period_hours")
     private Integer validityPeriodHours;
 
-    @Column(name = "is_subscription", nullable = false)
-    private Boolean isSubscription;
-
     public Long getId() {
         return id;
     }
@@ -97,13 +94,5 @@ public class Tariff {
 
     public void setValidityPeriodHours(Integer validityPeriodHours) {
         this.validityPeriodHours = validityPeriodHours;
-    }
-
-    public Boolean getIsSubscription() {
-        return isSubscription;
-    }
-
-    public void setIsSubscription(Boolean subscription) {
-        isSubscription = subscription;
     }
 }

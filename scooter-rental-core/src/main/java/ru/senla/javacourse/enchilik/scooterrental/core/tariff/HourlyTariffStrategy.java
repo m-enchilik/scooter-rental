@@ -15,6 +15,7 @@ public class HourlyTariffStrategy implements TariffStrategy {
     public Rental finish(Rental rental, long minutesUsed) {
         Subscription subscription = rental.getSubscription();
         subscription.setRestUnits(0L);
+        subscription.setActive(false);
         BigDecimal price = subscription.getTariff().getPrice();
         rental.setTotalCost(price);
         return rental;

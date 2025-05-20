@@ -19,6 +19,7 @@ import ru.senla.javacourse.enchilik.scooterrental.core.model.Role;
 import ru.senla.javacourse.enchilik.scooterrental.core.model.User;
 import ru.senla.javacourse.enchilik.scooterrental.core.payment.PaymentService;
 import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.UserRepository;
+import ru.senla.javacourse.enchilik.scooterrental.core.service.SubscriptionService;
 import ru.senla.javacourse.enchilik.scooterrental.core.service.UserService;
 
 @Service
@@ -27,15 +28,17 @@ public class UserServiceImpl implements UserService {
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private final UserRepository userRepository;
+    private final SubscriptionService subscriptionService;
     private final PasswordEncoder passwordEncoder;
     private final PaymentService paymentService;
 
 
     @Autowired
     public UserServiceImpl(
-        UserRepository userRepository,
+        UserRepository userRepository, SubscriptionService subscriptionService,
         @Lazy PasswordEncoder passwordEncoder, PaymentService paymentService) {
         this.userRepository = userRepository;
+        this.subscriptionService = subscriptionService;
         this.passwordEncoder = passwordEncoder;
         this.paymentService = paymentService;
     }
@@ -64,13 +67,16 @@ public class UserServiceImpl implements UserService {
         user.setDeposit(BigDecimal.ZERO);
         user.setRoles(roles);
         User saved = userRepository.save(user);
+
+        subscriptionService.addBasicTariff(user);
+
         UserDto userDto = convertToUserDto(saved);
         return userDto;
     }
 
     @Override
     @Transactional
-    public UserDto save(UserDto userDto) throws UserAlreadyExistsException {
+    public UserDto create(UserDto userDto) throws UserAlreadyExistsException {
         logger.info("Попытка создать нового пользователя с данными: {}", userDto);
 
         try {
@@ -119,6 +125,8 @@ public class UserServiceImpl implements UserService {
             user = userRepository.save(user);
 
             userDto.setId(user.getId());
+
+            subscriptionService.addBasicTariff(user);
 
             logger.info("Пользователь успешно создан с ID: {}", user.getId());
             return userDto;

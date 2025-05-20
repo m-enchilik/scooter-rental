@@ -20,7 +20,11 @@ public class PrepaidMinutesTariffStrategy implements TariffStrategy {
     @Override
     public Rental finish(Rental rental, long minutesUsed) {
         Subscription subscription = rental.getSubscription();
-        subscription.setRestUnits(subscription.getRestUnits() - minutesUsed);
+        long restUnits = subscription.getRestUnits() - minutesUsed;
+        subscription.setRestUnits(restUnits);
+        if (restUnits <= 0) {
+            subscription.setActive(false);
+        }
         Tariff tariff = rental.getSubscription().getTariff();
         BigDecimal minuteCost = tariff.getPrice().divide(BigDecimal.valueOf(tariff.getUnitsIncluded()));
         BigDecimal totalCost = minuteCost.multiply(BigDecimal.valueOf(minutesUsed));

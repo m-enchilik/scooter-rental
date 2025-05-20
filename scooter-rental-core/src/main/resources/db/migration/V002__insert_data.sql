@@ -17,12 +17,12 @@ VALUES (-1, 'ADMIN'),
        (-4, 'USER'),
        (-5, 'USER');
 
-INSERT INTO tariffs (id, type, name, description, price, units_included, validity_period_hours, is_subscription)
-VALUES (-1, 'BASIC', 'Почасовой', 'Оплата за каждый час использования', 5.0, NULL, NULL, FALSE),
-       (-2, 'BASIC', 'Дневной абонемент', 'Абонемент на целый день', NULL, 20.0, NULL, TRUE),
-       (-3, 'BASIC', 'Студенческий', 'Скидка для студентов', 4.0, NULL, 0.10, FALSE),
-       (-4, 'BASIC', 'Ночной', 'Тариф для ночного катания', 7.0, NULL, NULL, FALSE),
-       (-5, 'BASIC', 'Выходного дня', 'Специальный тариф на выходные', 6.0, NULL, NULL, FALSE);
+INSERT INTO tariffs (id, type, name, description, price, units_included, validity_period_hours)
+VALUES (-1, 'BASIC', 'Базовый', 'Поминутная оплата', 10, NULL, NULL),
+       (-2, 'HOURLY', 'На 1 час', 'Поездка на час', 300, 1, 1),
+       (-3, 'HOURLY', 'На 2 часа', 'Поездка на два часа', 500, 2, 2),
+       (-4, 'PREPAID_MINUTES', 'Месячный абонемент', '300 минут, на месяц', 2100, 300, 30*24),
+       (-5, 'PREPAID_MINUTES', 'Недельный абонемент', '100 минут, на неделю', 800, 100, 7*24);
 
 INSERT INTO rental_points (id, name, address, latitude, longitude, parent_point_id)
 VALUES (-1, 'Главный офис Калуга - Правый берег', 'ул. Генерала Попова, 1А', 54.491796, 36.224693, NULL),
