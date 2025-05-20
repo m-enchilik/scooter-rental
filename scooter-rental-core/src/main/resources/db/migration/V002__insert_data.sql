@@ -32,19 +32,19 @@ VALUES (-1, 'Главный офис Калуга - Правый берег', '�
        (-5, 'Точка пл. Победы', 'ул. Маршала Жукова, 1', 54.513156, 36.274812, -4),
        (-6, 'Точка пл. Московской', 'ул. Московская, 212', 54.530985, 36.269047, -4);
 
-INSERT INTO scooters (id, model, serial_number, status, charge_level, mileage, rental_point_id, tariff_id)
-VALUES (-1, 'Xiaomi M365', 'SN0001', 'AVAILABLE', 85, 150.5, -1, -1),
-       (-2, 'Ninebot ES2', 'SN0002', 'IN_USE', 60, 80.2, -1, -1),
-       (-3, 'Xiaomi M365 Pro', 'SN0003', 'AVAILABLE', 95, 200.0, -2, -2),
-       (-4, 'Ninebot ES4', 'SN0004', 'MAINTENANCE', 20, 500.7, -2, -1),
-       (-5, 'Xiaomi M365', 'SN0005', 'AVAILABLE', 70, 120.3, -3, -3),
-       (-6, 'Ninebot ES2', 'SN0006', 'AVAILABLE', 90, 180.8, -3, -4),
-       (-7, 'Xiaomi M365 Pro', 'SN0007', 'IN_USE', 45, 300.1, -4, -1),
-       (-8, 'Ninebot ES4', 'SN0008', 'AVAILABLE', 80, 250.6, -5, -5),
-       (-9, 'Xiaomi M365', 'SN0009', 'AVAILABLE', 65, 90.9, -5, -1),
-       (-10, 'Ninebot ES2', 'SN0010', 'UNAVAILABLE', 10, 400.4, -6, -1),
-       (-11, 'Xiaomi M365', 'SN0011', 'AVAILABLE', 75, 110.1, -6, -3),
-       (-12, 'Ninebot ES2', 'SN0012', 'IN_USE', 55, 70.7, -1, -1);
+INSERT INTO scooters (id, model, serial_number, status, charge_level, mileage, rental_point_id)
+VALUES (-1, 'Xiaomi M365', 'SN0001', 'AVAILABLE', 85, 150.5, -1),
+       (-2, 'Ninebot ES2', 'SN0002', 'IN_USE', 60, 80.2, -1),
+       (-3, 'Xiaomi M365 Pro', 'SN0003', 'AVAILABLE', 95, 200.0, -2),
+       (-4, 'Ninebot ES4', 'SN0004', 'MAINTENANCE', 20, 500.7, -2),
+       (-5, 'Xiaomi M365', 'SN0005', 'AVAILABLE', 70, 120.3, -3),
+       (-6, 'Ninebot ES2', 'SN0006', 'AVAILABLE', 90, 180.8, -3),
+       (-7, 'Xiaomi M365 Pro', 'SN0007', 'IN_USE', 45, 300.1, -4),
+       (-8, 'Ninebot ES4', 'SN0008', 'AVAILABLE', 80, 250.6, -5),
+       (-9, 'Xiaomi M365', 'SN0009', 'AVAILABLE', 65, 90.9, -5),
+       (-10, 'Ninebot ES2', 'SN0010', 'UNAVAILABLE', 10, 400.4, -6),
+       (-11, 'Xiaomi M365', 'SN0011', 'AVAILABLE', 75, 110.1, -6),
+       (-12, 'Ninebot ES2', 'SN0012', 'IN_USE', 55, 70.7, -1);
 
 INSERT INTO subscriptions (id, user_id, tariff_id, expiration_time, rest_units)
 VALUES (-1, -1, -1, '2025-12-31 23:59:59', 10),

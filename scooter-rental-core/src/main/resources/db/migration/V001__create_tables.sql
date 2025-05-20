@@ -54,8 +54,7 @@ CREATE TABLE scooters
     status          VARCHAR(20)        NOT NULL,
     charge_level    INTEGER            NOT NULL,
     mileage         DOUBLE PRECISION,
-    rental_point_id BIGINT REFERENCES rental_points (id),
-    tariff_id       BIGINT REFERENCES tariffs (id)
+    rental_point_id BIGINT REFERENCES rental_points (id)
 );
 
 CREATE TABLE subscriptions
