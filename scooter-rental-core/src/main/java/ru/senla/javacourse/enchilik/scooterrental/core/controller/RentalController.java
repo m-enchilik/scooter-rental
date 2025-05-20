@@ -18,13 +18,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.senla.javacourse.enchilik.scooterrental.api.dto.RentalDto;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.RentalNotFoundException;
-import ru.senla.javacourse.enchilik.scooterrental.core.exception.RentalPointNotFoundException;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.ScooterNotFoundException;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.UserNotFoundException;
 import ru.senla.javacourse.enchilik.scooterrental.core.model.User;
-import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.UserRepository;
 import ru.senla.javacourse.enchilik.scooterrental.core.service.RentalService;
-import ru.senla.javacourse.enchilik.scooterrental.core.service.SecurityService;
 
 @RestController
 @RequestMapping("/api/rentals")

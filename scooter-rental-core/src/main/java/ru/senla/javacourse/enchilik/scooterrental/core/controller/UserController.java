@@ -1,11 +1,13 @@
 package ru.senla.javacourse.enchilik.scooterrental.core.controller;
 
 import jakarta.validation.Valid;
+import java.math.BigDecimal;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,10 +15,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.senla.javacourse.enchilik.scooterrental.api.dto.UserDto;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.UserAlreadyExistsException;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.UserNotFoundException;
+import ru.senla.javacourse.enchilik.scooterrental.core.model.User;
+import ru.senla.javacourse.enchilik.scooterrental.core.payment.PaymentService;
 import ru.senla.javacourse.enchilik.scooterrental.core.service.UserService;
 
 @RestController
@@ -24,6 +29,7 @@ import ru.senla.javacourse.enchilik.scooterrental.core.service.UserService;
 public class UserController {
 
     private final UserService userService;
+
 
     @Autowired
     public UserController(UserService userService) {
@@ -66,5 +72,14 @@ public class UserController {
     public ResponseEntity<List<UserDto>> getAllUsers() {
         List<UserDto> users = userService.getAllUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @PostMapping("/deposit")
+    public ResponseEntity<UserDto> updateUserDeposit(
+        @AuthenticationPrincipal User user,
+        @RequestParam BigDecimal amount)
+        throws UserNotFoundException {
+        UserDto userDto = userService.deposit(user, amount);
+        return  new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 }

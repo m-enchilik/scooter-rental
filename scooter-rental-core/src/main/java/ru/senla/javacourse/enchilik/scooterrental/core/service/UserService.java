@@ -1,5 +1,6 @@
 package ru.senla.javacourse.enchilik.scooterrental.core.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import ru.senla.javacourse.enchilik.scooterrental.api.dto.UserDto;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.UserAlreadyExistsException;
@@ -12,6 +13,7 @@ public interface UserService {
     UserDto getUserById(Long id) throws UserNotFoundException;
 
     UserDto updateUser(Long id, UserDto userDto) throws UserNotFoundException;
+    UserDto deposit(User user, BigDecimal amount) throws UserNotFoundException;
 
     void deleteUser(Long id) throws UserNotFoundException;
 

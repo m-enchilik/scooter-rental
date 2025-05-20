@@ -1,6 +1,7 @@
 package ru.senla.javacourse.enchilik.scooterrental.core.service.impl;
 
 import jakarta.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -8,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.senla.javacourse.enchilik.scooterrental.api.dto.UserDto;
@@ -15,6 +18,7 @@ import ru.senla.javacourse.enchilik.scooterrental.core.exception.UserAlreadyExis
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.UserNotFoundException;
 import ru.senla.javacourse.enchilik.scooterrental.core.model.Role;
 import ru.senla.javacourse.enchilik.scooterrental.core.model.User;
+import ru.senla.javacourse.enchilik.scooterrental.core.payment.PaymentService;
 import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.UserRepository;
 import ru.senla.javacourse.enchilik.scooterrental.core.service.UserService;
 
@@ -25,13 +29,16 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final PaymentService paymentService;
+
 
     @Autowired
     public UserServiceImpl(
         UserRepository userRepository,
-        @Lazy PasswordEncoder passwordEncoder) {
+        @Lazy PasswordEncoder passwordEncoder, PaymentService paymentService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.paymentService = paymentService;
     }
 
     @Override
@@ -167,6 +174,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDto deposit(User user, BigDecimal amount) throws UserNotFoundException {
+        if (paymentService.deposit(amount)) {
+            BigDecimal before = user.getDeposit();
+            if (before == null) {
+                before = BigDecimal.ZERO;
+            }
+            user.setDeposit(before.add(amount));
+        }
+        user = userRepository.update(user);
+        UserDto userDto = convertToUserDto(user);
+        return userDto;
+    }
+
+    @Override
     @Transactional
     public void deleteUser(Long id) throws UserNotFoundException {
         logger.info("Попытка удалить пользователя с ID: {}", id);
@@ -241,6 +262,8 @@ public class UserServiceImpl implements UserService {
                 .stream()
                 .map(Role::name)
                 .collect(Collectors.toSet()));
+        dto.setDeposit(user.getDeposit().toString());
+        dto.setPassword("<HIDDEN>");
         return dto;
     }
 }
