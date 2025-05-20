@@ -21,7 +21,6 @@ import ru.senla.javacourse.enchilik.scooterrental.api.dto.UserDto;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.UserAlreadyExistsException;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.UserNotFoundException;
 import ru.senla.javacourse.enchilik.scooterrental.core.model.User;
-import ru.senla.javacourse.enchilik.scooterrental.core.payment.PaymentService;
 import ru.senla.javacourse.enchilik.scooterrental.core.service.UserService;
 
 @RestController
@@ -43,14 +42,29 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @PostMapping("/register")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<UserDto> registerUser(@Valid @RequestBody UserDto userDto)
-        throws UserAlreadyExistsException {
-        UserDto createdUser = userService.createUser(userDto);
+    @PostMapping("/self-register")
+    public ResponseEntity<UserDto> selfRegister(
+        @RequestParam String userName,
+        @RequestParam String password,
+        @RequestParam String firstName,
+        @RequestParam String lastName,
+        @RequestParam String email,
+        @RequestParam String phoneNumber
+        )
+        throws UserNotFoundException {
+        UserDto createdUser = userService.createUser(userName, password, firstName, lastName, email, phoneNumber);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
+    @PostMapping("/register")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<UserDto> registerByAdmin(@Valid @RequestBody UserDto userDto)
+        throws UserAlreadyExistsException {
+        UserDto createdUser = userService.save(userDto);
+        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+    }
+
+    // TODO: следует выделить информацию, которую пользователь не может обновить в отдельную сущность
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN') or #id == principal.id")
     public ResponseEntity<UserDto> updateUser(

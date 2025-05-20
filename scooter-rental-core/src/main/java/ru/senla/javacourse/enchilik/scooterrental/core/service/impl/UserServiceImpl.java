@@ -2,6 +2,7 @@ package ru.senla.javacourse.enchilik.scooterrental.core.service.impl;
 
 import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -9,8 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.senla.javacourse.enchilik.scooterrental.api.dto.UserDto;
@@ -42,8 +41,36 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDto createUser(
+        String userName,
+        String password,
+        String firstName,
+        String lastName,
+        String email,
+        String phoneNumber) {
+        Set<Role> roles = new HashSet<>();
+        roles.add(Role.USER);
+
+
+        User user = new User();
+        user.setUsername(userName);
+        user.setPassword(password);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setEmail(email);
+        user.setPhoneNumber(phoneNumber);
+        user.setUserBlocked(false);
+        user.setRentBlocked(false);
+        user.setDeposit(BigDecimal.ZERO);
+        user.setRoles(roles);
+        User saved = userRepository.save(user);
+        UserDto userDto = convertToUserDto(saved);
+        return userDto;
+    }
+
+    @Override
     @Transactional
-    public UserDto createUser(UserDto userDto) throws UserAlreadyExistsException {
+    public UserDto save(UserDto userDto) throws UserAlreadyExistsException {
         logger.info("Попытка создать нового пользователя с данными: {}", userDto);
 
         try {
@@ -65,6 +92,23 @@ public class UserServiceImpl implements UserService {
             user.setLastName(userDto.getLastName());
             user.setEmail(userDto.getEmail());
             user.setPhoneNumber(userDto.getPhoneNumber());
+            if (userDto.getDeposit() == null) {
+                user.setDeposit(BigDecimal.ZERO);
+            } else {
+                user.setDeposit(new BigDecimal(userDto.getDeposit()));
+            }
+
+            if (userDto.getUserBlocked() == null) {
+                user.setUserBlocked(false);
+            } else {
+                user.setUserBlocked(userDto.getUserBlocked());
+            }
+
+            if (userDto.getRentBlocked() == null) {
+                user.setRentBlocked(false);
+            } else {
+                user.setRentBlocked(userDto.getRentBlocked());
+            }
 
             Set<Role> roles = userDto.getRoles().stream()
                     .map(Role::valueOf)
@@ -254,6 +298,7 @@ public class UserServiceImpl implements UserService {
         UserDto dto = new UserDto();
         dto.setId(user.getId());
         dto.setUsername(user.getUsername());
+        dto.setPassword("<HIDDEN>");
         dto.setFirstName(user.getFirstName());
         dto.setLastName(user.getLastName());
         dto.setEmail(user.getEmail());
@@ -263,7 +308,8 @@ public class UserServiceImpl implements UserService {
                 .map(Role::name)
                 .collect(Collectors.toSet()));
         dto.setDeposit(user.getDeposit().toString());
-        dto.setPassword("<HIDDEN>");
+        dto.setUserBlocked(user.getUserBlocked());
+        dto.setRentBlocked(user.getRentBlocked());
         return dto;
     }
 }

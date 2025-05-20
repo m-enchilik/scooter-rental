@@ -32,7 +32,7 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<UserDto> registerUser(@Valid @RequestBody UserDto userDto)
         throws UserAlreadyExistsException {
-        UserDto createdUser = userService.createUser(userDto);
+        UserDto createdUser = userService.save(userDto);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
