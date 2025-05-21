@@ -25,16 +25,13 @@ public class ScooterServiceImpl implements ScooterService {
 
     private final ScooterRepository scooterRepository;
     private final RentalPointRepository rentalPointRepository;
-    private final TariffRepository tariffRepository;
 
     @Autowired
     public ScooterServiceImpl(
         ScooterRepository scooterRepository,
-        RentalPointRepository rentalPointRepository,
-        TariffRepository tariffRepository) {
+        RentalPointRepository rentalPointRepository) {
         this.scooterRepository = scooterRepository;
         this.rentalPointRepository = rentalPointRepository;
-        this.tariffRepository = tariffRepository;
     }
 
     @Override
@@ -130,7 +127,7 @@ public class ScooterServiceImpl implements ScooterService {
                 scooter.setMileage(scooterDto.getMileage());
             }
 
-            scooter = scooterRepository.save(scooter);
+            scooter = scooterRepository.update(scooter);
             logger.info("Самокат с ID {} успешно обновлен.", id);
             return convertToScooterDto(scooter);
         } catch (Exception e) {

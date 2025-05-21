@@ -162,16 +162,16 @@ public class TariffServiceImpl implements TariffService {
     }
 
     @Override
-    public SubscriptionDto buyTariff(User user, Long id) {
+    public SubscriptionDto buyTariff(User user, Long tariffId) {
 
         Tariff tariff =
             tariffRepository
-                .findById(id)
+                .findById(tariffId)
                 .orElseThrow(
                     () -> {
-                        logger.warn("Тариф с ID {} не найден.", id);
+                        logger.warn("Тариф с ID {} не найден.", tariffId);
                         return new TariffNotFoundException(
-                            "Тариф с ID " + id + " не найден");
+                            "Тариф с ID " + tariffId + " не найден");
                     });
 
         if (user.getDeposit().compareTo(tariff.getPrice()) < 0) {

@@ -135,7 +135,7 @@ public class RentalPointServiceImpl implements RentalPointService {
                             });
                 rentalPoint.setParentPoint(parentPoint);
             }
-            rentalPointRepository.save(rentalPoint);
+            rentalPointRepository.update(rentalPoint);
             logger.info("Точка проката с ID {} успешно обновлена.", id);
             return rentalPointDto;
         } catch (Exception e) {

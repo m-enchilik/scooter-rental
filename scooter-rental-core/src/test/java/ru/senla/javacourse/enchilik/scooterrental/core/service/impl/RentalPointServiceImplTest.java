@@ -42,6 +42,7 @@ public class RentalPointServiceImplTest {
     public void contextTest() {
         assertNotNull(service);
         assertNotNull(repo);
+        assertNotNull(scooterService);
     }
 
     @Test
@@ -83,10 +84,9 @@ public class RentalPointServiceImplTest {
         Long id = new Random().nextLong();
         rentalPoint.setId(id);
         doReturn(Optional.of(rentalPoint)).when(repo).findById(id);
-        doReturn(Optional.of(rentalPoint)).when(repo).save(rentalPoint);
         service.update(id, convertToDto(rentalPoint));
-        verify(repo, times(1)).save(rentalPoint);
-        verify(repo, times(1)).save(any());
+        verify(repo, times(1)).update(rentalPoint);
+        verify(repo, times(1)).update(any());
     }
 
     @Test
@@ -120,9 +120,37 @@ public class RentalPointServiceImplTest {
     void getRootRentalPoints() {
         RentalPoint rentalPoint1 = generateTestData();
         RentalPoint rentalPoint2 = generateTestData();
-        RentalPoint rentalPoint3 = generateTestData();
-        rentalPoint1.setChildPoints(List.of(rentalPoint2, rentalPoint3));
+        RentalPoint rentalPoint11 = generateTestData();
+        RentalPoint rentalPoint12 = generateTestData();
+        rentalPoint1.setChildPoints(List.of(rentalPoint11, rentalPoint12));
 
+        List<RentalPoint> rentalPoints = List.of(rentalPoint1, rentalPoint2);
+
+        doReturn(rentalPoints).when(repo).findAll();
+
+        List<RentalPointDto> found = service.findAll();
+        RentalPointDto foundRentalPointChildren = found.stream()
+            .filter(it -> it.getId().equals(rentalPoint1.getId()))
+            .findFirst()
+            .get();
+        compareByDetails(rentalPoints, found);
+        compareByDetails(
+            rentalPoint1.getChildPoints(),
+            foundRentalPointChildren.getChildPoints()
+        );
+    }
+
+    private static void compareByDetails(List<RentalPoint> rentalPoints, List<RentalPointDto> found) {
+        assertTrue(found.size() == rentalPoints.size());
+        assertTrue(found.stream().map(RentalPointDto::getId).toList()
+            .containsAll(rentalPoints.stream().map(RentalPoint::getId).toList()));
+    }
+
+    @Test
+    void getChildRentalPoints() {
+        RentalPoint rentalPoint1 = generateTestData();
+        RentalPoint rentalPoint2 = generateTestData();
+        RentalPoint rentalPoint3 = generateTestData();
         List<RentalPoint> rentalPoints = List.of(rentalPoint1, rentalPoint2, rentalPoint3);
 
         doReturn(rentalPoints).when(repo).findAll();
@@ -133,14 +161,11 @@ public class RentalPointServiceImplTest {
             .containsAll(rentalPoints.stream().map(RentalPoint::getId).toList()));
     }
 
-    @Test
-    void getChildRentalPoints() {
-
-    }
-
     private RentalPoint generateTestData() {
         String name = UUID.randomUUID().toString();
+        Long id = new Random().nextLong();
         RentalPoint rentalPoint = new RentalPoint();
+        rentalPoint.setId(id);
         rentalPoint.setName(name);
         return rentalPoint;
     }
