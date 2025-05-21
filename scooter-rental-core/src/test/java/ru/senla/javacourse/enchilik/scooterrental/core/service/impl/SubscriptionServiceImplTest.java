@@ -1,6 +1,9 @@
 package ru.senla.javacourse.enchilik.scooterrental.core.service.impl;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
@@ -16,12 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import ru.senla.javacourse.enchilik.scooterrental.api.dto.ScooterDto;
 import ru.senla.javacourse.enchilik.scooterrental.api.dto.SubscriptionDto;
 import ru.senla.javacourse.enchilik.scooterrental.api.enumeration.TariffType;
-import ru.senla.javacourse.enchilik.scooterrental.core.exception.ScooterNotFoundException;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.SubscriptionNotFoundException;
-import ru.senla.javacourse.enchilik.scooterrental.core.model.Scooter;
 import ru.senla.javacourse.enchilik.scooterrental.core.model.Subscription;
 import ru.senla.javacourse.enchilik.scooterrental.core.model.Tariff;
 import ru.senla.javacourse.enchilik.scooterrental.core.model.User;
@@ -61,7 +61,6 @@ class SubscriptionServiceImplTest {
         verify(repo, times(1)).save(subscription);
         verify(repo, times(1)).save(any());
     }
-
 
 
     @Test
@@ -175,6 +174,10 @@ class SubscriptionServiceImplTest {
         verify(repo, times(1)).save(any());
     }
 
+    private static long randomId() {
+        return new Random().nextLong();
+    }
+
     private Subscription generateFullTestData() {
         User user = new User();
         user.setId(randomId());
@@ -193,9 +196,5 @@ class SubscriptionServiceImplTest {
         dto.setUserId(subscription.getUser().getId());
         dto.setTariffId(subscription.getTariff().getId());
         return dto;
-    }
-
-    private static long randomId() {
-        return new Random().nextLong();
     }
 }

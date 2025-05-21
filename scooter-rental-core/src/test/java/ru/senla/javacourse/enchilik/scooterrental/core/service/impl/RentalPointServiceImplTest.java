@@ -1,17 +1,18 @@
 package ru.senla.javacourse.enchilik.scooterrental.core.service.impl;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -140,12 +141,6 @@ public class RentalPointServiceImplTest {
         );
     }
 
-    private static void compareByDetails(List<RentalPoint> rentalPoints, List<RentalPointDto> found) {
-        assertTrue(found.size() == rentalPoints.size());
-        assertTrue(found.stream().map(RentalPointDto::getId).toList()
-            .containsAll(rentalPoints.stream().map(RentalPoint::getId).toList()));
-    }
-
     @Test
     void getChildRentalPoints() {
         RentalPoint rentalPoint1 = generateTestData();
@@ -156,6 +151,12 @@ public class RentalPointServiceImplTest {
         doReturn(rentalPoints).when(repo).findAll();
 
         List<RentalPointDto> found = service.findAll();
+        assertTrue(found.size() == rentalPoints.size());
+        assertTrue(found.stream().map(RentalPointDto::getId).toList()
+            .containsAll(rentalPoints.stream().map(RentalPoint::getId).toList()));
+    }
+
+    private static void compareByDetails(List<RentalPoint> rentalPoints, List<RentalPointDto> found) {
         assertTrue(found.size() == rentalPoints.size());
         assertTrue(found.stream().map(RentalPointDto::getId).toList()
             .containsAll(rentalPoints.stream().map(RentalPoint::getId).toList()));

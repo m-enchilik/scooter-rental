@@ -1,6 +1,10 @@
 package ru.senla.javacourse.enchilik.scooterrental.core.service.impl;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
@@ -15,12 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import ru.senla.javacourse.enchilik.scooterrental.api.dto.RentalDto;
 import ru.senla.javacourse.enchilik.scooterrental.api.dto.ScooterDto;
 import ru.senla.javacourse.enchilik.scooterrental.api.enumeration.ScooterStatus;
-import ru.senla.javacourse.enchilik.scooterrental.core.exception.RentalNotFoundException;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.ScooterNotFoundException;
-import ru.senla.javacourse.enchilik.scooterrental.core.model.Rental;
 import ru.senla.javacourse.enchilik.scooterrental.core.model.RentalPoint;
 import ru.senla.javacourse.enchilik.scooterrental.core.model.Scooter;
 import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.RentalPointRepository;
@@ -53,7 +54,6 @@ class ScooterServiceImplTest {
         verify(repo, times(1)).save(scooter);
         verify(repo, times(1)).save(any());
     }
-
 
 
     @Test
@@ -142,6 +142,10 @@ class ScooterServiceImplTest {
         assertNotEquals(scooterStatus, scooter1.getStatus());
     }
 
+    private static long randomId() {
+        return new Random().nextLong();
+    }
+
     private ScooterDto convertToDto(Scooter scooter) {
         ScooterDto dto = new ScooterDto();
         dto.setId(scooter.getId());
@@ -156,9 +160,5 @@ class ScooterServiceImplTest {
         scooter.setRentalPoint(rentalPoint);
         scooter.setStatus(ScooterStatus.AVAILABLE);
         return scooter;
-    }
-
-    private static long randomId() {
-        return new Random().nextLong();
     }
 }

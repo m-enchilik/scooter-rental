@@ -1,6 +1,9 @@
 package ru.senla.javacourse.enchilik.scooterrental.core.service.impl;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
@@ -19,7 +22,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.senla.javacourse.enchilik.scooterrental.api.dto.RentalDto;
-import ru.senla.javacourse.enchilik.scooterrental.api.dto.RentalPointDto;
 import ru.senla.javacourse.enchilik.scooterrental.api.enumeration.ScooterStatus;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.RentalNotFoundException;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.UserRentalBlockedException;
@@ -63,7 +65,7 @@ class RentalServiceImplTest {
 
     @MockitoBean
     private RentalPointRepository rentalPointRepository;
-//    private RentalPointServiceImpl rentalPointService;
+    //    private RentalPointServiceImpl rentalPointService;
 
     @MockitoBean
     private TariffStrategyResolver tariffStrategyResolver;
@@ -197,7 +199,7 @@ class RentalServiceImplTest {
         doReturn(strategy).when(tariffStrategyResolver).resolve(any());
 
         service.endRental(rentalId, pointId);
-        verify(strategy, times(1)).finish(rental, 3+1);
+        verify(strategy, times(1)).finish(rental, 3 + 1);
     }
 
     @Test
@@ -243,6 +245,10 @@ class RentalServiceImplTest {
             .containsAll(rental.stream().map(Rental::getId).toList()));
     }
 
+    private static long randomId() {
+        return new Random().nextLong();
+    }
+
     private Rental generateFullTestData() {
         User user = new User();
         user.setId(randomId());
@@ -259,9 +265,5 @@ class RentalServiceImplTest {
         RentalDto dto = new RentalDto();
         dto.setId(rental.getId());
         return dto;
-    }
-
-    private static long randomId() {
-        return new Random().nextLong();
     }
 }

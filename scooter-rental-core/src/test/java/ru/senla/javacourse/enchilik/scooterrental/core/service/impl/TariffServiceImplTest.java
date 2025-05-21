@@ -1,6 +1,9 @@
 package ru.senla.javacourse.enchilik.scooterrental.core.service.impl;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
@@ -12,7 +15,6 @@ import java.util.Optional;
 import java.util.Random;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -137,6 +139,10 @@ class TariffServiceImplTest {
         verify(subscriptionService, times(1)).save(any(Subscription.class));
     }
 
+    private static long randomId() {
+        return new Random().nextLong();
+    }
+
     private Tariff generateFullTestData() {
         Tariff tariff = new Tariff();
         tariff.setId(randomId());
@@ -147,10 +153,5 @@ class TariffServiceImplTest {
         TariffDto dto = new TariffDto();
         dto.setId(tariff.getId());
         return dto;
-    }
-
-
-    private static long randomId() {
-        return new Random().nextLong();
     }
 }

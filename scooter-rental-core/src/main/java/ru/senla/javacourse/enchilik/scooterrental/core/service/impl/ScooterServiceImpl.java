@@ -15,7 +15,6 @@ import ru.senla.javacourse.enchilik.scooterrental.core.exception.TariffNotFoundE
 import ru.senla.javacourse.enchilik.scooterrental.core.model.Scooter;
 import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.RentalPointRepository;
 import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.ScooterRepository;
-import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.TariffRepository;
 import ru.senla.javacourse.enchilik.scooterrental.core.service.ScooterService;
 
 @Service

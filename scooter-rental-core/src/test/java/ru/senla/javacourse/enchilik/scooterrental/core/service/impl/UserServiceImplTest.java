@@ -1,7 +1,6 @@
 package ru.senla.javacourse.enchilik.scooterrental.core.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -24,11 +23,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import ru.senla.javacourse.enchilik.scooterrental.api.dto.SubscriptionDto;
 import ru.senla.javacourse.enchilik.scooterrental.api.dto.UserDto;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.UserNotFoundException;
 import ru.senla.javacourse.enchilik.scooterrental.core.model.Role;
-import ru.senla.javacourse.enchilik.scooterrental.core.model.Subscription;
 import ru.senla.javacourse.enchilik.scooterrental.core.model.User;
 import ru.senla.javacourse.enchilik.scooterrental.core.payment.PaymentService;
 import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.UserRepository;
@@ -183,6 +180,10 @@ class UserServiceImplTest {
 
     }
 
+    private static long randomId() {
+        return new Random().nextLong();
+    }
+
     private User generateFullTestData() {
         User user = new User();
         user.setId(randomId());
@@ -199,9 +200,5 @@ class UserServiceImplTest {
             .map(r -> r.name())
             .collect(Collectors.toSet()));
         return dto;
-    }
-
-    private static long randomId() {
-        return new Random().nextLong();
     }
 }
