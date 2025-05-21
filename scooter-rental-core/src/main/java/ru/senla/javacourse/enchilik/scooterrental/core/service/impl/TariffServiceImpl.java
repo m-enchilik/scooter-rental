@@ -108,16 +108,9 @@ public class TariffServiceImpl implements TariffService {
             if (tariffDto.getDescription() != null) {
                 tariff.setDescription(tariffDto.getDescription());
             }
-            //            TODO: доработать
-            //            if (tariffDto.getPricePerHour() != null) {
-            //                tariff.setPricePerHour(tariffDto.getPricePerHour());
-            //            }
             if (tariffDto.getSubscriptionPrice() != null) {
                 tariff.setPrice(tariffDto.getSubscriptionPrice());
             }
-            //            if (tariffDto.getDiscount() != null) {
-            //                tariff.setDiscount(tariffDto.getDiscount());
-            //            }
 
             tariffRepository.save(tariff);
             TariffDto updatedTariffDto = convertToTariffDto(tariff);

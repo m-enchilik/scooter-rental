@@ -16,7 +16,7 @@ public class UserRepository extends AbstractDao<User, Long> {
     }
 
     public User findByUsername(String username) {
-        String hql = "FROM User WHERE username = :username";
+        String hql = "FROM User u WHERE u.username = :username";
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
@@ -35,7 +35,7 @@ public class UserRepository extends AbstractDao<User, Long> {
     }
 
     public User findByEmail(String email) {
-        String hql = "FROM User WHERE email = :email";
+        String hql = "FROM User u WHERE u.email = :email";
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
@@ -54,12 +54,6 @@ public class UserRepository extends AbstractDao<User, Long> {
     }
 
     public boolean existsByUsername(String username) {
-        //        TODO: доделать метод
-        return false;
-    }
-
-    public boolean existsByEmail(String email) {
-        //        TODO: доделать метод
-        return false;
+        return findByUsername(username) != null;
     }
 }

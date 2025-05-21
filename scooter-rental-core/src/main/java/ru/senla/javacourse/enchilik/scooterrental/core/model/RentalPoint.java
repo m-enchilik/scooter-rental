@@ -33,7 +33,6 @@ public class RentalPoint {
     @Column(name = "longitude", nullable = false)
     private Double longitude;
 
-    //    TODO: добавить scooters в таблицу rental_point?????
     @OneToMany(
         mappedBy = "rentalPoint",
         cascade = CascadeType.ALL,

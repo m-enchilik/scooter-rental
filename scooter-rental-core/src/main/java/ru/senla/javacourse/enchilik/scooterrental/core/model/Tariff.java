@@ -15,12 +15,10 @@ import ru.senla.javacourse.enchilik.scooterrental.api.enumeration.TariffType;
 @Table(name = "tariffs")
 public class Tariff {
 
-    //    TODO: создать конструктор тарифов
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //    TODO: добавить отношения и аннотации
     @Column(name = "type", nullable = false)
     @Enumerated(EnumType.STRING)
     private TariffType type;

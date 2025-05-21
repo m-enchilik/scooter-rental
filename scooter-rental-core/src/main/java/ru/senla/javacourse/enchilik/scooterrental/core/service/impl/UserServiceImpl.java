@@ -86,10 +86,6 @@ public class UserServiceImpl implements UserService {
                     userDto.getUsername());
                 throw new UserAlreadyExistsException("Пользователь с таким именем уже существует");
             }
-            if (userRepository.existsByEmail(userDto.getEmail())) {
-                logger.error("Пользователь с email {} уже существует.", userDto.getEmail());
-                throw new UserAlreadyExistsException("Пользователь с таким email уже существует");
-            }
 
             User user = new User();
             user.setUsername(userDto.getUsername());
@@ -196,12 +192,6 @@ public class UserServiceImpl implements UserService {
                 user.setLastName(userDto.getLastName());
             }
             if (userDto.getEmail() != null) {
-                if (!userDto.getEmail().equals(user.getEmail())
-                    && userRepository.existsByEmail(userDto.getEmail())) {
-                    logger.error("Email {} уже занят.", userDto.getEmail());
-                    throw new UserAlreadyExistsException(
-                        "Email " + userDto.getEmail() + " уже занят");
-                }
                 user.setEmail(userDto.getEmail());
             }
             if (userDto.getPhoneNumber() != null) {

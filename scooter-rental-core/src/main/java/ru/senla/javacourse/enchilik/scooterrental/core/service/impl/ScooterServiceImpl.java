@@ -172,7 +172,6 @@ public class ScooterServiceImpl implements ScooterService {
                     .collect(Collectors.toList());
             logger.info("Получено {} самокатов.", scooters.size());
             return scooters;
-            // TODO добавить нормальную ошибку
         } catch (Exception e) {
             logger.error("Ошибка при получении всех самокатов: {}", e.getMessage(), e);
             throw e;
