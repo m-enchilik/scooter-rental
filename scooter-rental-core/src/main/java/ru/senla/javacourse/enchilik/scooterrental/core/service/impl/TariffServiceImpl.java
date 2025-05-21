@@ -15,7 +15,6 @@ import ru.senla.javacourse.enchilik.scooterrental.core.exception.UserHasNotEnoug
 import ru.senla.javacourse.enchilik.scooterrental.core.model.Subscription;
 import ru.senla.javacourse.enchilik.scooterrental.core.model.Tariff;
 import ru.senla.javacourse.enchilik.scooterrental.core.model.User;
-import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.SubscriptionRepository;
 import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.TariffRepository;
 import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.UserRepository;
 import ru.senla.javacourse.enchilik.scooterrental.core.service.SubscriptionService;
@@ -32,7 +31,10 @@ public class TariffServiceImpl implements TariffService {
     private final UserRepository userRepository;
 
     @Autowired
-    public TariffServiceImpl(TariffRepository tariffRepository, SubscriptionService subscriptionService, UserRepository userRepository) {
+    public TariffServiceImpl(
+        TariffRepository tariffRepository,
+        SubscriptionService subscriptionService,
+        UserRepository userRepository) {
         this.tariffRepository = tariffRepository;
         this.subscriptionService = subscriptionService;
         this.userRepository = userRepository;
@@ -179,7 +181,7 @@ public class TariffServiceImpl implements TariffService {
                             "Тариф с ID " + id + " не найден");
                     });
 
-        if (user.getDeposit().compareTo(tariff.getPrice()) < 0)  {
+        if (user.getDeposit().compareTo(tariff.getPrice()) < 0) {
             throw new UserHasNotEnoughMoneyException("Не достаточно денег для покупки тарифа");
         }
         user.setDeposit(user.getDeposit().subtract(tariff.getPrice()));

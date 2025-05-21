@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DummyPaymentService implements PaymentService{
+public class DummyPaymentService implements PaymentService {
     @Override
     public boolean deposit(BigDecimal amount) {
         return true;

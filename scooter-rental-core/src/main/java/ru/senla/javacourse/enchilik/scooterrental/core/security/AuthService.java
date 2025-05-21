@@ -1,21 +1,19 @@
 package ru.senla.javacourse.enchilik.scooterrental.core.security;
 
 import io.jsonwebtoken.Claims;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.AuthException;
 import ru.senla.javacourse.enchilik.scooterrental.core.model.User;
-import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.UserRepository;
 import ru.senla.javacourse.enchilik.scooterrental.core.security.jwt.JwtAuthentication;
 import ru.senla.javacourse.enchilik.scooterrental.core.security.jwt.JwtProvider;
 import ru.senla.javacourse.enchilik.scooterrental.core.security.jwt.JwtRequest;
 import ru.senla.javacourse.enchilik.scooterrental.core.security.jwt.JwtResponse;
 import ru.senla.javacourse.enchilik.scooterrental.core.service.UserService;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 public class AuthService {
@@ -73,7 +71,8 @@ public class AuthService {
                 final User user = userService.findByUsername(login);
                 if (user == null) {
                     throw new AuthException("Пользователь не найден");
-                }                final String accessToken = jwtProvider.generateAccessToken(user);
+                }
+                final String accessToken = jwtProvider.generateAccessToken(user);
                 final String newRefreshToken = jwtProvider.generateRefreshToken(user);
                 refreshStorage.put(user.getUsername(), newRefreshToken);
                 return new JwtResponse(accessToken, newRefreshToken);

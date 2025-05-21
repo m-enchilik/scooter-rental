@@ -5,7 +5,6 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.TariffNotFoundException;
-import ru.senla.javacourse.enchilik.scooterrental.core.model.Scooter;
 import ru.senla.javacourse.enchilik.scooterrental.core.model.Tariff;
 
 @Repository

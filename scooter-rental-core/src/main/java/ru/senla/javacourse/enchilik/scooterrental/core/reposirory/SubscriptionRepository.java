@@ -1,7 +1,6 @@
 package ru.senla.javacourse.enchilik.scooterrental.core.reposirory;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
@@ -41,12 +40,12 @@ public class SubscriptionRepository extends AbstractDao<Subscription, Long> {
 
     public List<Subscription> findActiveByUserId(Long userId) {
         String hql = """
-            SELECT s
-            FROM Subscription s
-            WHERE s.isActive = TRUE
-                AND s.user.id = :userId
-                AND (s.expirationTime is null OR s.expirationTime > :threshold)
-        """;
+                SELECT s
+                FROM Subscription s
+                WHERE s.isActive = TRUE
+                    AND s.user.id = :userId
+                    AND (s.expirationTime is null OR s.expirationTime > :threshold)
+            """;
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();

@@ -11,7 +11,7 @@ public class TariffDto {
 
     private TariffType type;
 
-//    @NotBlank(message = "Название тарифа не может быть пустым")
+    //    @NotBlank(message = "Название тарифа не может быть пустым")
     @Size(max = 50, message = "Название тарифа не может превышать 50 символов")
     private String name;
 
@@ -25,7 +25,7 @@ public class TariffDto {
 
     private Integer validityPeriodHours;
 
-//    @NotNull(message = "Поле 'isSubscription' не может быть null")
+    //    @NotNull(message = "Поле 'isSubscription' не может быть null")
     private Boolean isSubscription;
 
     public Long getId() {

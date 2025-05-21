@@ -117,8 +117,8 @@ public class UserServiceImpl implements UserService {
             }
 
             Set<Role> roles = userDto.getRoles().stream()
-                    .map(Role::valueOf)
-                    .collect(Collectors.toSet());
+                .map(Role::valueOf)
+                .collect(Collectors.toSet());
 
             user.setRoles(roles);
 
@@ -210,8 +210,8 @@ public class UserServiceImpl implements UserService {
 
             if (userDto.getRoles() != null) {
                 Set<Role> roles = userDto.getRoles().stream()
-                        .map(Role::valueOf)
-                        .collect(Collectors.toSet());
+                    .map(Role::valueOf)
+                    .collect(Collectors.toSet());
 
                 user.setRoles(roles);
             }
@@ -312,9 +312,9 @@ public class UserServiceImpl implements UserService {
         dto.setEmail(user.getEmail());
         dto.setPhoneNumber(user.getPhoneNumber());
         dto.setRoles(user.getRoles()
-                .stream()
-                .map(Role::name)
-                .collect(Collectors.toSet()));
+            .stream()
+            .map(Role::name)
+            .collect(Collectors.toSet()));
         dto.setDeposit(user.getDeposit().toString());
         dto.setUserBlocked(user.getUserBlocked());
         dto.setRentBlocked(user.getRentBlocked());

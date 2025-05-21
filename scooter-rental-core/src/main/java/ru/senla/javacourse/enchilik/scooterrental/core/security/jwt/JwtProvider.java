@@ -13,7 +13,6 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.List;
 import javax.crypto.SecretKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,8 +89,8 @@ public class JwtProvider {
             log.error("Unsupported jwt", unsEx);
         } catch (MalformedJwtException mjEx) {
             log.error("Malformed jwt", mjEx);
-        } catch (SignatureException sEx) {
-            log.error("Invalid signature", sEx);
+        } catch (SignatureException e) {
+            log.error("Invalid signature", e);
         } catch (Exception e) {
             log.error("invalid token", e);
         }

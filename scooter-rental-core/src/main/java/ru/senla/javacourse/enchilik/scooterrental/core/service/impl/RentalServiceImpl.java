@@ -1,7 +1,6 @@
 package ru.senla.javacourse.enchilik.scooterrental.core.service.impl;
 
 import jakarta.transaction.Transactional;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -9,26 +8,27 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.senla.javacourse.enchilik.scooterrental.api.dto.RentalDto;
 import ru.senla.javacourse.enchilik.scooterrental.api.enumeration.ScooterStatus;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.RentalNotFoundException;
+import ru.senla.javacourse.enchilik.scooterrental.core.exception.RentalPointNotFoundException;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.ScooterNotFoundException;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.SubscriptionNotFoundException;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.SubscriptionWrongUserException;
+import ru.senla.javacourse.enchilik.scooterrental.core.exception.TariffNotFoundException;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.UserNotFoundException;
 import ru.senla.javacourse.enchilik.scooterrental.core.exception.UserRentalBlockedException;
 import ru.senla.javacourse.enchilik.scooterrental.core.model.Rental;
+import ru.senla.javacourse.enchilik.scooterrental.core.model.RentalPoint;
 import ru.senla.javacourse.enchilik.scooterrental.core.model.Scooter;
 import ru.senla.javacourse.enchilik.scooterrental.core.model.Subscription;
 import ru.senla.javacourse.enchilik.scooterrental.core.model.Tariff;
 import ru.senla.javacourse.enchilik.scooterrental.core.model.User;
+import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.RentalPointRepository;
 import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.RentalRepository;
 import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.ScooterRepository;
 import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.SubscriptionRepository;
-import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.TariffRepository;
 import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.UserRepository;
 import ru.senla.javacourse.enchilik.scooterrental.core.service.RentalService;
 import ru.senla.javacourse.enchilik.scooterrental.core.service.ScooterService;
@@ -41,6 +41,8 @@ public class RentalServiceImpl implements RentalService {
     private static final Logger logger = LoggerFactory.getLogger(RentalServiceImpl.class);
 
     private final RentalRepository rentalRepository;
+
+    private final RentalPointRepository rentalPointRepository;
     private final UserRepository userRepository;
     private final ScooterRepository scooterRepository;
     private final ScooterService scooterService;
@@ -50,6 +52,7 @@ public class RentalServiceImpl implements RentalService {
     @Autowired
     public RentalServiceImpl(
         RentalRepository rentalRepository,
+        RentalPointRepository rentalPointRepository,
         UserRepository userRepository,
         ScooterRepository scooterRepository,
         ScooterService scooterService,
@@ -57,6 +60,7 @@ public class RentalServiceImpl implements RentalService {
         TariffStrategyResolver tariffStrategyResolver
     ) {
         this.rentalRepository = rentalRepository;
+        this.rentalPointRepository = rentalPointRepository;
         this.userRepository = userRepository;
         this.scooterRepository = scooterRepository;
         this.scooterService = scooterService;
@@ -233,6 +237,10 @@ public class RentalServiceImpl implements RentalService {
             .orElseThrow(() ->
                 new ScooterNotFoundException("scooter not found by id: '%s'".formatted(scooterId)));
 
+        if (scooter.getStatus() != ScooterStatus.AVAILABLE) {
+            throw new IllegalArgumentException("scooter by id: '%s' is not available".formatted(scooterId));
+        }
+
         Tariff tariff = subscription.getTariff();
 
         TariffStrategy tariffStrategy = tariffStrategyResolver.resolve(tariff.getType());
@@ -256,23 +264,34 @@ public class RentalServiceImpl implements RentalService {
 
     @Override
     @Transactional
-    public RentalDto endRental(Long id) throws RentalNotFoundException, ScooterNotFoundException {
-        logger.info("Попытка завершить аренду с ID: {}", id);
+    public RentalDto endRental(Long rentalId, Long pointId)
+        throws RentalPointNotFoundException,
+        RentalNotFoundException,
+        ScooterNotFoundException,
+        TariffNotFoundException {
+        logger.info("Попытка завершить аренду с ID: {}", rentalId);
         try {
             Rental rental =
                 rentalRepository
-                    .findById(id)
+                    .findById(rentalId)
                     .orElseThrow(
                         () -> {
-                            logger.warn("Аренда с ID {} не найдена.", id);
+                            logger.warn("Аренда с ID {} не найдена.", rentalId);
                             return new RentalNotFoundException(
-                                "Аренда с ID " + id + " не найдена");
+                                "Аренда с ID " + rentalId + " не найдена");
                         });
 
             if (rental.getEndTime() != null) {
-                logger.error("Аренда с ID {} уже завершена.", id);
+                logger.error("Аренда с ID {} уже завершена.", pointId);
                 throw new IllegalArgumentException("Аренда уже завершена");
             }
+
+            RentalPoint rentalPoint = rentalPointRepository.findById(pointId).orElseThrow(
+                () -> {
+                    logger.warn("Точка аренды с ID {} не найдена.", pointId);
+                    return new RentalPointNotFoundException(
+                        "Точка аренды с ID " + pointId + " не найдена");
+                });
 
             Tariff tariff = rental.getSubscription().getTariff();
             TariffStrategy tariffStrategy = tariffStrategyResolver.resolve(tariff.getType());
@@ -280,8 +299,10 @@ public class RentalServiceImpl implements RentalService {
             rental.setEndTime(LocalDateTime.now());
             Scooter scooter = rental.getScooter();
             rental.setEndMileage(scooter.getMileage());
-
-            long minutesUsed = ChronoUnit.MINUTES.between(rental.getStartTime(), rental.getEndTime()) + 1; // Это округление в большую сторону
+            scooter.setRentalPoint(rentalPoint);
+            scooter.setStatus(ScooterStatus.AVAILABLE);
+            // Это округление в большую сторону
+            long minutesUsed = ChronoUnit.MINUTES.between(rental.getStartTime(), rental.getEndTime()) + 1;
 
             tariffStrategy.finish(rental, minutesUsed);
             rental = rentalRepository.save(rental);
@@ -290,10 +311,10 @@ public class RentalServiceImpl implements RentalService {
 
             RentalDto rentalDto = convertToRentalDto(rental);
 
-            logger.info("Аренда с ID {} успешно завершена.", id);
+            logger.info("Аренда с ID {} успешно завершена.", pointId);
             return rentalDto;
         } catch (Exception e) {
-            logger.error("Ошибка при завершении аренды с ID {}: {}", id, e.getMessage(), e);
+            logger.error("Ошибка при завершении аренды с ID {}: {}", pointId, e.getMessage(), e);
             throw e;
         }
     }
@@ -348,29 +369,6 @@ public class RentalServiceImpl implements RentalService {
             return rentals;
         } catch (Exception e) {
             logger.error("Ошибка при получении записей аренды для самоката с ID {}: {}",
-                scooterId,
-                e.getMessage(),
-                e);
-            throw e;
-        }
-    }
-
-    @Override
-    @Transactional
-    public List<RentalDto> getRentalHistoryByScooter(Long scooterId) {
-        logger.info("Попытка получить историю аренды для самоката с ID: {}", scooterId);
-        try {
-            List<RentalDto> rentals = rentalRepository.findByScooterId(scooterId).stream()
-                .map(this::convertToRentalDto)
-                .collect(Collectors.toList());
-            logger.info(
-                "Получено {} записей истории аренды для самоката с ID {}.",
-                rentals.size(),
-                scooterId);
-            return rentals;
-        } catch (Exception e) {
-            logger.error(
-                "Ошибка при получении истории аренды для самоката с ID {}: {}",
                 scooterId,
                 e.getMessage(),
                 e);

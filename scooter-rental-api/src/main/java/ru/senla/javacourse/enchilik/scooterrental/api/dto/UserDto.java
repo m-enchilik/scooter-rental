@@ -3,7 +3,6 @@ package ru.senla.javacourse.enchilik.scooterrental.api.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-
 import java.util.HashSet;
 import java.util.Set;
 

@@ -11,8 +11,6 @@ import org.springframework.stereotype.Service;
 import ru.senla.javacourse.enchilik.scooterrental.core.model.User;
 import ru.senla.javacourse.enchilik.scooterrental.core.reposirory.UserRepository;
 
-import java.util.Set;
-
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
@@ -29,9 +27,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         User user = userRepository.findByUsername(username);
 
         Set<? extends GrantedAuthority> grantedAuthorities =
-                user.getRoles();
+            user.getRoles();
 
         return new org.springframework.security.core.userdetails.User(
-                user.getUsername(), user.getPassword(), grantedAuthorities);
+            user.getUsername(), user.getPassword(), grantedAuthorities);
     }
 }

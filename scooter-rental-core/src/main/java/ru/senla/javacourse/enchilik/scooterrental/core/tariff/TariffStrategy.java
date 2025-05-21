@@ -7,7 +7,7 @@ import ru.senla.javacourse.enchilik.scooterrental.core.model.User;
 
 public interface TariffStrategy {
     /**
-     * сколько минут можно проехать на данном тарифе
+     * сколько минут можно проехать на данном тарифе.
      */
     long predictTimeLimitMinutes(User user, Subscription subscription);
 

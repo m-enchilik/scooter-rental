@@ -50,7 +50,7 @@ public class UserController {
         @RequestParam String lastName,
         @RequestParam String email,
         @RequestParam String phoneNumber
-        )
+    )
         throws UserNotFoundException {
         UserDto createdUser = userService.createUser(userName, password, firstName, lastName, email, phoneNumber);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
@@ -94,6 +94,6 @@ public class UserController {
         @RequestParam BigDecimal amount)
         throws UserNotFoundException {
         UserDto userDto = userService.deposit(user, amount);
-        return  new ResponseEntity<>(userDto, HttpStatus.OK);
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 }

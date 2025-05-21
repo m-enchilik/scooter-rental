@@ -1,8 +1,6 @@
 package ru.senla.javacourse.enchilik.scooterrental.core.tariff;
 
-import jakarta.persistence.Column;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import org.springframework.stereotype.Component;
 import ru.senla.javacourse.enchilik.scooterrental.api.enumeration.TariffType;
 import ru.senla.javacourse.enchilik.scooterrental.core.model.Rental;

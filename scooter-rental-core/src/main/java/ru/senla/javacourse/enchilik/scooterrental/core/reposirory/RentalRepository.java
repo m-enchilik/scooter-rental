@@ -45,6 +45,7 @@ public class RentalRepository extends AbstractDao<Rental, Long> {
             Query<Rental> query = session.createQuery(hql, Rental.class);
             query.setParameter("scooterId", scooterId);
             List<Rental> list = query.list();
+            list.forEach(this::fillLazyFields);
             transaction.commit();
             return list;
         } catch (Exception e) {

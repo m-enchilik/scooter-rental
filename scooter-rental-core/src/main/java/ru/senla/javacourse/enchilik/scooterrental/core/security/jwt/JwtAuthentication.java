@@ -35,6 +35,10 @@ public class JwtAuthentication implements Authentication {
         return principal;
     }
 
+    public void setPrincipal(User principal) {
+        this.principal = principal;
+    }
+
     @Override
     public boolean isAuthenticated() {
         return authenticated;
@@ -72,9 +76,5 @@ public class JwtAuthentication implements Authentication {
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
-    }
-
-    public void setPrincipal(User principal) {
-        this.principal = principal;
     }
 }

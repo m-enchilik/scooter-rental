@@ -8,11 +8,13 @@ import ru.senla.javacourse.enchilik.scooterrental.core.exception.UserNotFoundExc
 import ru.senla.javacourse.enchilik.scooterrental.core.model.User;
 
 public interface UserService {
-    UserDto createUser(String userName, String password, String firstName, String lastName, String email, String phoneNumber);
+    UserDto createUser(
+        String userName, String password, String firstName, String lastName, String email, String phoneNumber);
 
     UserDto create(UserDto userDto) throws UserAlreadyExistsException;
 
     UserDto getUserById(Long id) throws UserNotFoundException;
+
     UserDto updateUser(Long id, UserDto userDto) throws UserNotFoundException;
 
     UserDto deposit(User user, BigDecimal amount) throws UserNotFoundException;

@@ -69,7 +69,7 @@ public class TariffController {
     }
 
     @PostMapping("/buy/{id}")
-    public ResponseEntity<SubscriptionDto> deleteTariff(@AuthenticationPrincipal User user, @PathVariable Long id)
+    public ResponseEntity<SubscriptionDto> buyTariff(@AuthenticationPrincipal User user, @PathVariable Long id)
         throws TariffNotFoundException {
         SubscriptionDto dto = tariffService.buyTariff(user, id);
         return new ResponseEntity<>(dto, HttpStatus.OK);

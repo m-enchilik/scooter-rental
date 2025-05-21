@@ -10,7 +10,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
-import ru.senla.javacourse.enchilik.scooterrental.api.enumeration.TariffType;
 
 @Entity
 @Table(name = "subscriptions")

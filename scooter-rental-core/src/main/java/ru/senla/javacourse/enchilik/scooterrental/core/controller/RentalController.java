@@ -28,6 +28,7 @@ import ru.senla.javacourse.enchilik.scooterrental.core.service.RentalService;
 public class RentalController {
 
     private final RentalService rentalService;
+
     @Autowired
     public RentalController(RentalService rentalService) {
         this.rentalService = rentalService;
@@ -76,11 +77,11 @@ public class RentalController {
         return new ResponseEntity<>(rentalDto, HttpStatus.OK);
     }
 
-    @PutMapping("/{id}/end")
+    @PutMapping("/end")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('MANAGER') or hasAuthority('ADMIN')")
-    public ResponseEntity<RentalDto> endRental(@PathVariable Long id)
+    public ResponseEntity<RentalDto> endRental(@RequestParam Long rentalId, @RequestParam Long pointId)
         throws RentalNotFoundException, ScooterNotFoundException {
-        RentalDto endRental = rentalService.endRental(id);
+        RentalDto endRental = rentalService.endRental(rentalId, pointId);
         return new ResponseEntity<>(endRental, HttpStatus.OK);
     }
 
@@ -108,14 +109,6 @@ public class RentalController {
     @PreAuthorize("hasAuthority('MANAGER') or hasAuthority('ADMIN')")
     public ResponseEntity<List<RentalDto>> getRentalsByScooter(@PathVariable Long scooterId) {
         List<RentalDto> rentals = rentalService.getRentalsByScooter(scooterId);
-        return new ResponseEntity<>(rentals, HttpStatus.OK);
-    }
-
-    @GetMapping("/scooter/{scooterId}/history")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<List<RentalDto>> getRentalHistoryByScooter(
-        @PathVariable Long scooterId) {
-        List<RentalDto> rentals = rentalService.getRentalHistoryByScooter(scooterId);
         return new ResponseEntity<>(rentals, HttpStatus.OK);
     }
 }

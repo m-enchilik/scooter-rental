@@ -34,6 +34,7 @@ public class RentalPointRepository extends AbstractDao<RentalPoint, Long> {
             throw new DaoException(e);
         }
     }
+
     @Override
     public List<RentalPoint> findAll() {
         String hql = "SELECT rp FROM RentalPoint rp WHERE rp.parentPoint IS NULL";
@@ -43,8 +44,8 @@ public class RentalPointRepository extends AbstractDao<RentalPoint, Long> {
             Query<RentalPoint> query = session.createQuery(hql, RentalPoint.class);
             List<RentalPoint> list = query.list();
             list.stream()
-                    .map(RentalPoint::getChildPoints)
-                    .forEach(this::fillLazyFieldsRecursively);
+                .map(RentalPoint::getChildPoints)
+                .forEach(this::fillLazyFieldsRecursively);
             transaction.commit();
             return list;
         } catch (Exception e) {
