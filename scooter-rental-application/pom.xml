@@ -22,6 +22,11 @@
             <artifactId>scooter-rental-core</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>ru.senla.javacourse.enchilik</groupId>
+            <artifactId>scooter-rental-db</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 </project>
