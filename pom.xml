@@ -40,8 +40,10 @@
         <jakarta.persistance.api.version>3.1.0</jakarta.persistance.api.version>
         <hibernate.core.version>6.6.11.Final</hibernate.core.version>
         <slf4j.api.version>2.0.16</slf4j.api.version>
+        <junit.jupiter.version>5.10.2</junit.jupiter.version>
         <logback.classic.version>1.5.16</logback.classic.version>
         <maven.checkstyle.plugin.version>3.6.0</maven.checkstyle.plugin.version>
+        <mockito-core.version>5.17.0</mockito-core.version>
         <checkstyle.location>config/checkstyle/google_checks.xml</checkstyle.location>
         <checkstyle.version>10.21.4</checkstyle.version>
 
@@ -124,6 +126,28 @@
             <optional>true</optional>
         </dependency>
     </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-api</artifactId>
+                <version>${junit.jupiter.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
+                <version>${junit.jupiter.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito-core.version}</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <plugins>
