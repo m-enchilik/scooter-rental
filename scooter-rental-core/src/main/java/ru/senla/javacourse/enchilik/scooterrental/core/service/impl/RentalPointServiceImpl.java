@@ -158,7 +158,7 @@ public class RentalPointServiceImpl implements RentalPointService {
                             return new RentalPointNotFoundException(
                                 "Точка проката с ID " + id + " не найдена");
                         });
-            rentalPointRepository.delete(rentalPoint.getId());
+            rentalPointRepository.delete(id);
             logger.info("Точка проката с ID {} успешно удалена.", id);
         } catch (Exception e) {
             logger.error("Ошибка при удалении точки проката с ID {}: {}", id, e.getMessage(), e);
@@ -244,18 +244,6 @@ public class RentalPointServiceImpl implements RentalPointService {
         if (rentalPoint.getParentPoint() != null) {
             dto.setParentPointId(rentalPoint.getParentPoint().getId());
         }
-
-        //        try {
-        //            List<ScooterDto> scooterDtos =
-        //                scooterService.getScootersByRentalPoint(rentalPoint.getId());
-        //            dto.setScooters(scooterDtos);
-        //        } catch (RentalPointNotFoundException e) {
-        //            logger.error(
-        //                "Точка проката с ID {} не найдена при получении самокатов: {}",
-        //                rentalPoint.getId(),
-        //                e.getMessage());
-        //            dto.setScooters(java.util.Collections.emptyList());
-        //        }
 
         return dto;
     }
